@@ -11,7 +11,7 @@
     tools:context="com.example.aharm.sporkly.MainActivity">
 
     <Button
-        android:text="My Pantry"
+        android:text="@string/myPantryButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/myPantry"
@@ -19,16 +19,16 @@
         android:layout_centerHorizontal="true" />
 
     <Button
-        android:text="Find a Recipe!"
+        android:text="@string/myIngredientsButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/recipeSearch"
+        android:id="@+id/myIngredients"
         android:layout_above="@+id/myPantry"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="83dp" />
 
     <TextView
-        android:text="Welcome to Sporkly! What would you like to do today?"
+        android:text="@string/welcomeText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
