@@ -1,36 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <EditText
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_weight="0"
         android:ems="10"
         android:id="@+id/pantryAddText"
-        android:layout_weight="0.54"
         android:inputType="text"
         android:hint="Enter Ingredient Name"
         android:padding="10dp"
-        android:outlineProvider="paddedBounds" />
+        />
 
     <Button
-        android:text="Add Ingredient"
-        android:layout_width="wrap_content"
+        android:text="Search Ingredients"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/pantryAddButton"
-        android:layout_weight="0.54"
-        android:layout_below="@+id/pantryAddText"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_weight="0" />
 
     <ListView
         android:layout_width="match_parent"
-        android:id="@+id/pantryIngredientList"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/pantryAddButton" />
-</RelativeLayout>
+        android:layout_height="0dp"
+
+        android:id="@+id/pantrySearchList" />
+
+    <TextView
+        android:text="My Pantry"
+        android:layout_width="match_parent"
+        android:layout_height="26dp"
+
+        android:id="@+id/pantryTitle"
+        android:textSize="18sp"
+        android:textAlignment="center" />
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0"
+
+        android:id="@+id/pantryIngredientList" />
+
+
+</LinearLayout>
