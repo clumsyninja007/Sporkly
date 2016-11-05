@@ -6,6 +6,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+/**
+ * This class controls loading the main page layout as well as button functionality
+ * Written by Archer Harmony, Trevor Dewitt, and Kevin Navarro
+ */
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private Button recipe, pantry;

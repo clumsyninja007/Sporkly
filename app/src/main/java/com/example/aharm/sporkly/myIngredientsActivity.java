@@ -21,7 +21,9 @@ import java.net.URL;
 import java.util.ArrayList;
 
 /**
- * Created by aharm on 10/26/2016.
+ * This class controls the My Ingredients layout including accessing the spoonacular API
+ * and displaying the results in a user-friendly way
+ * Written by: David Sides, Archer Harmony
  */
 
 public class myIngredientsActivity extends AppCompatActivity implements View.OnClickListener {

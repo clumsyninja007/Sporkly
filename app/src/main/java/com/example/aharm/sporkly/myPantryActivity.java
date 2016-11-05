@@ -28,7 +28,10 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
- * Created by aharm on 10/26/2016.
+ * This class controls the My Pantry layout including allowing users to create a list of
+ * ingredients on hand as well as checking that those ingredients exist within the spoonacular
+ * ingredients database.
+ * Written by: Trevor Dewitt, David Sides
  */
 
 public class myPantryActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener{
