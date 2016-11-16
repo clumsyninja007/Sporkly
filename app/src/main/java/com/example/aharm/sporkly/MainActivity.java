@@ -13,7 +13,6 @@ import android.widget.Button;
  */
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
-
     private Button recipe, pantry, recipeSearch;
 
     @Override
@@ -31,6 +30,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         recipe.setOnClickListener(this);
         pantry.setOnClickListener(this);
         recipeSearch.setOnClickListener(this);
+
     }
 
     @Override

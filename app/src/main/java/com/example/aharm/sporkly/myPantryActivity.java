@@ -20,11 +20,9 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 /**
  * This class controls the My Pantry layout including allowing users to create a list of
@@ -37,13 +35,15 @@ public class myPantryActivity extends AppCompatActivity implements View.OnClickL
     private static final String API_KEY = "9rUDYWAnkEmshQkuvwanU54zDmXDp15QkyljsnQa9nVIoFwLY8";
     private static final String PANTRY_FILE = "myPantry.txt";
 
+    ListStorage pantry;
+    ListStorage shoppingList;
+
     Button addButton;
     EditText editText;
     ListView pantryList;
     ListView searchList;
 
     //Array for list of ingredients in the pantry.
-    ArrayList<String> pantryItems=new ArrayList<String>();
     ArrayAdapter<String> pantryAdapter;
 
     //Array for search results.
@@ -57,14 +57,16 @@ public class myPantryActivity extends AppCompatActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.my_pantry);
 
+        pantry = ((MyApplication) this.getApplication()).getPantry();
+        shoppingList = ((MyApplication) this.getApplication()).getShoppingList();
+
         addButton = (Button)findViewById(R.id.pantryAddButton);
         editText = (EditText)findViewById(R.id.pantryAddText);
         pantryList = (ListView)findViewById(R.id.pantryIngredientList);
         searchList = (ListView)findViewById(R.id.pantrySearchList);
 
         // Initialize data for the ingredients list view.
-        pantryItems = new ArrayList<String>();
-        pantryAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, pantryItems);
+        pantryAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, pantry.getItems());
         pantryList.setAdapter(pantryAdapter);
 
         // Enable context menu on the list, so we can remove list items.
@@ -82,16 +84,14 @@ public class myPantryActivity extends AppCompatActivity implements View.OnClickL
 
         // Make the search ingredient button clickable
         addButton.setOnClickListener(this);
-
-        // Attempt to load local stored pantry data.
-        loadPantry(PANTRY_FILE);
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Log.i("ItemClick", "Position: " + position);
 
-        addPantryItem(searchItems.get(position));
+        pantry.add(searchItems.get(position));
+        pantryAdapter.notifyDataSetChanged();
 
         searchAdapter.clear();
         searchAdapter.notifyDataSetChanged();
@@ -120,7 +120,8 @@ public class myPantryActivity extends AppCompatActivity implements View.OnClickL
         int selectedIndex = info.position;
 
         if(item.getTitle().equals("Delete Entry")){
-            removePantryItem(selectedIndex);
+            pantry.remove(selectedIndex);
+            pantryAdapter.notifyDataSetChanged();
         }
 
         return true;
@@ -141,51 +142,6 @@ public class myPantryActivity extends AppCompatActivity implements View.OnClickL
                 break;
             default:
                 break;
-        }
-    }
-
-    private void addPantryItem(String item) {
-        if(item.isEmpty() == false) {
-            pantryAdapter.add(item);
-            pantryAdapter.notifyDataSetChanged();
-
-            savePantry(PANTRY_FILE);
-        }
-    }
-
-    private void removePantryItem(int index) {
-        if (index >= 0 && index < pantryAdapter.getCount()) {
-            pantryItems.remove(index);
-            pantryAdapter.notifyDataSetChanged();
-
-            savePantry(PANTRY_FILE);
-        }
-    }
-
-    private void savePantry(String fileName) {
-        try{
-            PrintWriter pw = new PrintWriter(openFileOutput(fileName, Context.MODE_PRIVATE));
-
-            for(String toDo : pantryItems){
-                pw.println(toDo);
-            }
-            pw.close();
-        } catch (Exception e) {
-            Log.i("savePantry", e.getMessage());
-        }
-    }
-
-    private void loadPantry(String fileName) {
-        try{
-            Scanner scanner = new Scanner(openFileInput(fileName));
-
-            while (scanner.hasNextLine()) {
-                String toDo = scanner.nextLine();
-                pantryAdapter.add(toDo);
-            }
-            scanner.close();
-        } catch (Exception e) {
-            Log.i("loadPantry", e.getMessage());
         }
     }
 
