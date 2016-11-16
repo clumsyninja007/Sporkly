@@ -1,8 +1,9 @@
 package com.example.aharm.sporkly;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -13,7 +14,7 @@ import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private Button recipe, pantry;
+    private Button recipe, pantry, recipeSearch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,9 +26,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void init() {
         recipe = (Button)findViewById(R.id.myIngredients);
         pantry = (Button)findViewById(R.id.myPantry);
+        recipeSearch = (Button)findViewById(R.id.recipeSearch);
 
         recipe.setOnClickListener(this);
         pantry.setOnClickListener(this);
+        recipeSearch.setOnClickListener(this);
     }
 
     @Override
@@ -38,6 +41,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.myPantry:
                 startActivity(new Intent(MainActivity.this, myPantryActivity.class));
+                break;
+            case R.id.recipeSearch:
+                Log.i("recipe", "clicked");
+                startActivity(new Intent(MainActivity.this, myRecipeSearchActivity.class));
                 break;
             default:
                 break;

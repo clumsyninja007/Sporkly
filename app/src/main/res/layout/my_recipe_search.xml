@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0"
+        android:ems="10"
+        android:id="@+id/recipeSearchText"
+        android:inputType="text"
+        android:hint="Enter Recipe Name"
+        android:padding="10dp"
+        />
+
+    <Button
+        android:text="Search Recipes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/recipeSearchButton"
+        android:layout_weight="0" />
+
+    <TextView
+        android:text="Search Results"
+        android:layout_width="match_parent"
+        android:layout_height="26dp"
+
+        android:id="@+id/recipeSearchTitle"
+        android:textSize="18sp"
+        android:textAlignment="center" />
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0"
+
+        android:id="@+id/recipeSearchList" />
+
+
+</LinearLayout>

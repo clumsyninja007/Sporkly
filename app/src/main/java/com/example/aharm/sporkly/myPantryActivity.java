@@ -2,7 +2,6 @@ package com.example.aharm.sporkly;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.ContextMenu;

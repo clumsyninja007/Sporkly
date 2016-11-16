@@ -17,6 +17,7 @@
         </activity>
         <activity android:name=".myIngredientsActivity" android:label="@string/myIngredientLabel"></activity>
         <activity android:name=".myPantryActivity" android:label="@string/myPantryLabel"></activity>
+        <activity android:name=".myRecipeSearchActivity" android:label="@string/recipeSearchButton"></activity>
     </application>
 
     <uses-permission android:name="android.permission.INTERNET"></uses-permission>
