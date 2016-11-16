@@ -13,7 +13,7 @@
 
     <TextView
         android:text="@string/welcomeText"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/textView2" />
 
@@ -29,6 +29,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/myPantry" />
+
+    <Button
+        android:text="@string/myShoppingListButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/myShoppingList" />
 
     <Button
         android:text="@string/recipeSearchButton"

@@ -31,20 +31,19 @@ import java.util.ArrayList;
  * Written by: Trevor Dewitt, David Sides
  */
 
-public class myPantryActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener{
+public class myShoppingListActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener{
     private static final String API_KEY = "9rUDYWAnkEmshQkuvwanU54zDmXDp15QkyljsnQa9nVIoFwLY8";
-    private static final String PANTRY_FILE = "myPantry.txt";
 
     ListStorage pantryStorage;
     ListStorage shoppingStorage;
 
     Button addButton;
     EditText editText;
-    ListView pantryList;
+    ListView shoppingList;
     ListView searchList;
 
     //Array for list of ingredients in the pantry.
-    ArrayAdapter<String> pantryAdapter;
+    ArrayAdapter<String> shoppingAdapter;
 
     //Array for search results.
     ArrayList<String> searchItems = new ArrayList<String>();
@@ -60,17 +59,17 @@ public class myPantryActivity extends AppCompatActivity implements View.OnClickL
         pantryStorage = ((MyApplication) this.getApplication()).getPantryStorage();
         shoppingStorage = ((MyApplication) this.getApplication()).getShoppingStorage();
 
-        addButton = (Button)findViewById(R.id.pantryAddButton);
-        editText = (EditText)findViewById(R.id.pantryAddText);
-        pantryList = (ListView)findViewById(R.id.pantryIngredientList);
-        searchList = (ListView)findViewById(R.id.pantrySearchList);
+        addButton = (Button)findViewById(R.id.shoppingAddButton);
+        editText = (EditText)findViewById(R.id.shoppingAddText);
+        shoppingList = (ListView)findViewById(R.id.shoppingIngredientList);
+        searchList = (ListView)findViewById(R.id.shoppingSearchList);
 
         // Initialize data for the ingredients list view.
-        pantryAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, pantryStorage.getItems());
-        pantryList.setAdapter(pantryAdapter);
+        shoppingAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, shoppingStorage.getItems());
+        shoppingList.setAdapter(shoppingAdapter);
 
         // Enable context menu on the list, so we can remove list items.
-        registerForContextMenu(pantryList);
+        registerForContextMenu(shoppingList);
 
         // Initialize data for the search list view.
         searchItems = new ArrayList<String>();
@@ -90,8 +89,8 @@ public class myPantryActivity extends AppCompatActivity implements View.OnClickL
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Log.i("ItemClick", "Position: " + position);
 
-        pantryStorage.add(searchItems.get(position));
-        pantryAdapter.notifyDataSetChanged();
+        shoppingStorage.add(searchItems.get(position));
+        shoppingAdapter.notifyDataSetChanged();
 
         searchAdapter.clear();
         searchAdapter.notifyDataSetChanged();
@@ -120,8 +119,8 @@ public class myPantryActivity extends AppCompatActivity implements View.OnClickL
         int selectedIndex = info.position;
 
         if(item.getTitle().equals("Delete Entry")){
-            pantryStorage.remove(selectedIndex);
-            pantryAdapter.notifyDataSetChanged();
+            shoppingStorage.remove(selectedIndex);
+            shoppingAdapter.notifyDataSetChanged();
         }
 
         return true;

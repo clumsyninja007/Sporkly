@@ -7,21 +7,21 @@ import android.app.Application;
  */
 
 public class MyApplication extends Application {
-    private ListStorage pantry = new ListStorage(this, "my_pantry.txt");
-    private ListStorage shoppingList = new ListStorage(this, "my_shopping_list.txt");
+    private ListStorage pantryStorage = new ListStorage(this, "my_pantry.txt");
+    private ListStorage shoppingStorage = new ListStorage(this, "my_shopping_list.txt");
 
     @Override
     public void onCreate() {
         super.onCreate();
-        pantry.load();
-        shoppingList.load();
+        pantryStorage.load();
+        shoppingStorage.load();
     }
 
-    public ListStorage getPantry() {
-        return pantry;
+    public ListStorage getPantryStorage() {
+        return pantryStorage;
     }
 
-    public ListStorage getShoppingList() {
-        return shoppingList;
+    public ListStorage getShoppingStorage() {
+        return shoppingStorage;
     }
 }

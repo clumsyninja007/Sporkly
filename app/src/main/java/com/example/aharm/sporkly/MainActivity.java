@@ -13,7 +13,7 @@ import android.widget.Button;
  */
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
-    private Button recipe, pantry, recipeSearch;
+    private Button recipe, pantry, shoppingList, recipeSearch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,12 +25,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void init() {
         recipe = (Button)findViewById(R.id.myIngredients);
         pantry = (Button)findViewById(R.id.myPantry);
+        shoppingList = (Button)findViewById(R.id.myShoppingList);
         recipeSearch = (Button)findViewById(R.id.recipeSearch);
 
         recipe.setOnClickListener(this);
         pantry.setOnClickListener(this);
+        shoppingList.setOnClickListener(this);
         recipeSearch.setOnClickListener(this);
-
     }
 
     @Override
@@ -41,6 +42,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.myPantry:
                 startActivity(new Intent(MainActivity.this, myPantryActivity.class));
+                break;
+            case R.id.myShoppingList:
+                startActivity(new Intent(MainActivity.this, myShoppingListActivity.class));
                 break;
             case R.id.recipeSearch:
                 Log.i("recipe", "clicked");

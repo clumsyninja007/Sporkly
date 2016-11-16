@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0"
+        android:ems="10"
+        android:id="@+id/shoppingAddText"
+        android:inputType="text"
+        android:hint="Enter Ingredient Name"
+        android:padding="10dp"
+        />
+
+    <Button
+        android:text="Search Ingredients"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/shoppingAddButton"
+        android:layout_weight="0" />
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+
+        android:id="@+id/shoppingSearchList" />
+
+    <TextView
+        android:text="My Shopping List"
+        android:layout_width="match_parent"
+        android:layout_height="26dp"
+
+        android:id="@+id/pantryTitle"
+        android:textSize="18sp"
+        android:textAlignment="center" />
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0"
+
+        android:id="@+id/shoppingIngredientList" />
+
+
+</LinearLayout>
