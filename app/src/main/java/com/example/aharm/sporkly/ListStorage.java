@@ -11,33 +11,43 @@ import java.util.Scanner;
  * Created by David on 11/16/2016.
  */
 
-public class ListStorage {
-    private ArrayList<String> items = new ArrayList<String>();
+class ListStorage {
+    private ArrayList<String> items = new ArrayList<>();
     private Context context;
     private String fileName;
 
-    public ListStorage (Context context, String fileName) {
+    ListStorage (Context context, String fileName) {
         this.context = context;
         this.fileName = fileName;
     }
 
-    public ArrayList<String> getItems () {
+    void setFile (String fileName) {
+        this.fileName = fileName;
+    }
+
+    ArrayList<String> getItems () {
         return items;
     }
 
-    public void add(String item) {
-        items.add(item);
+    boolean add(String item) {
+        boolean success = items.add(item);
 
-        save();
+        if (success) {
+            save();
+        }
+
+        return success;
     }
 
-    public void remove(int index) {
-        items.remove(index);
+    String remove(int index) {
+        String removedString = items.remove(index);
 
         save();
+
+        return removedString;
     }
 
-    public void save() {
+    boolean save() {
         Log.i("Saving", fileName);
 
         try{
@@ -48,14 +58,17 @@ public class ListStorage {
                 pw.println(toDo);
             }
             pw.close();
+
+            return true;
         } catch (Exception e) {
             Log.i("Error:", e.getMessage());
         }
+
+        return false;
     }
 
-    public void load() {
+    boolean load() {
         Log.i("Loading", fileName);
-
 
         items.clear();
 
@@ -69,8 +82,12 @@ public class ListStorage {
                 items.add(toDo);
             }
             scanner.close();
+
+            return true;
         } catch (Exception e) {
             Log.i("loadPantry", e.getMessage());
         }
+
+        return false;
     }
 }

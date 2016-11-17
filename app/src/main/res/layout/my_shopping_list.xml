@@ -9,17 +9,17 @@
         android:layout_height="wrap_content"
         android:layout_weight="0"
         android:ems="10"
-        android:id="@+id/shoppingAddText"
+        android:id="@+id/shoppingEditText"
         android:inputType="text"
-        android:hint="Enter Ingredient Name"
+        android:hint="@string/shoppingHint"
         android:padding="10dp"
         />
 
     <Button
-        android:text="Search Ingredients"
+        android:text="@string/shoppingButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/shoppingAddButton"
+        android:id="@+id/shoppingButton"
         android:layout_weight="0" />
 
     <ListView
@@ -29,7 +29,7 @@
         android:id="@+id/shoppingSearchList" />
 
     <TextView
-        android:text="My Shopping List"
+        android:text="@string/shoppingTitle"
         android:layout_width="match_parent"
         android:layout_height="26dp"
 

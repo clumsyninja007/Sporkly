@@ -1,6 +1,7 @@
 package com.example.aharm.sporkly;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -32,7 +33,7 @@ public class myRecipeSearchActivity extends AppCompatActivity implements View.On
     EditText recipeText;
 
     //Array for list of recipes
-    ArrayList<String> recipeItems =new ArrayList<String>();
+    ArrayList<String> recipeItems =new ArrayList<>();
     ArrayAdapter<String> recipeAdapter;
 
     HttpURLConnection con;
@@ -47,8 +48,8 @@ public class myRecipeSearchActivity extends AppCompatActivity implements View.On
         recipeList = (ListView)findViewById(R.id.recipeSearchList);
 
         // Initialize data for the ingredients list view.
-        recipeItems = new ArrayList<String>();
-        recipeAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, recipeItems);
+        recipeItems = new ArrayList<>();
+        recipeAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, recipeItems);
         recipeList.setAdapter(recipeAdapter);
 
         recipeButton.setOnClickListener(this);
@@ -61,7 +62,7 @@ public class myRecipeSearchActivity extends AppCompatActivity implements View.On
             case R.id.recipeSearchButton:
                 Log.i("recipeButton", "clicked");
 
-                searchForRecipes(recipeText.getText().toString());
+                new SearchForRecipesTask().execute(recipeText.getText().toString());
 
                 // This forces the keyboard to hide, because for some reason
                 // the keyboard showing makes the search results not show.
@@ -73,90 +74,75 @@ public class myRecipeSearchActivity extends AppCompatActivity implements View.On
         }
     }
 
-    private void searchForRecipes(final String query) {
-        new Thread(new Runnable() {
-            public void run() {
-                if(query.length() > 1) {
-                    Log.i("recipeSearchButton", "clicked");
+    private class SearchForRecipesTask extends AsyncTask<String, Void, Boolean> {
+        JSONArray result;
 
-                    // Real query
-                    final JSONArray arr = requestSearchRecipe(5, query);
+        protected Boolean doInBackground(String... query) {
+            try {
+                URL url = new URL("https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/autocomplete?" +
+                        "number=" + 5 +
+                        "&query=" + query[0]);
 
-                    // Test query
-                    /*JSONArray testArr = null;
-                    try {
-                        testArr = new JSONArray("[{\"name\":\"apple\",\"image\":\"apple.jpg\"}]");
-                    } catch (Exception e) {
+                HttpURLConnection con = (HttpURLConnection) url.openConnection();
+                con.setRequestMethod("GET");
 
-                    }
-                    final JSONArray arr = testArr;*/
+                // Add header properties, such as api key
+                con.setRequestProperty("X-Mashape-Key", API_KEY);
+                con.setRequestProperty("Accept", "application/json");
 
-                    recipeList.post(new Runnable() {
-                        public void run() {
-                            recipeAdapter.clear();
-                            Log.i("Parsing JSONArray", "Length: " + arr.length());
+                int responseCode = con.getResponseCode();
 
-                            if (arr != null) {
-                                if (arr.length() > 0) {
-                                    for (int i = 0; i < arr.length(); i++) {
-                                        try {
-                                            Log.i("Parsing JSONArray", "Current: " + i);
-                                            JSONObject obj = arr.getJSONObject(i);
-                                            String name = obj.getString("title");
-                                            Log.i("Parsing JSONArray", "Name: " + name);
-                                            recipeAdapter.add(name);
-                                        } catch (Exception e) {
-                                            Log.i("Parsing JSONArray", e.getMessage());
-                                        }
-                                    }
-                                } else {
-                                    recipeAdapter.add("No recipes found");
-                                }
-                            }
+                BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                con.disconnect();
 
-                            Log.i("SearchList", "Updated");
-                            recipeAdapter.notifyDataSetChanged();
-                        }
-                    });
+                String inputLine;
+                StringBuilder response = new StringBuilder();
+
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
                 }
+                in.close();
+
+                Log.d("http", response.toString());
+
+                result = new JSONArray(response.toString());
+
+                return true;
+            }catch( Exception e) {
+                e.printStackTrace();
             }
-        }).start();
-    }
 
-    private JSONArray requestSearchRecipe(int number, String query) {
-        JSONArray arr = null;
-        try {
-            URL url = new URL("https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/autocomplete?" +
-                    "number=" + number +
-                    "&query=" + query);
+            return false;
+        }
 
-            con = (HttpURLConnection) url.openConnection();
-            con.setRequestMethod("GET");
+        protected void onPostExecute(Boolean success) {
+            Log.d("onPostExecute", "" + success);
 
-            // Add header properties, such as api key
-            con.setRequestProperty("X-Mashape-Key", API_KEY);
-            con.setRequestProperty("Accept", "application/json");
+            if (success) {
+                recipeAdapter.clear();
+                Log.i("Parsing JSONArray", "Length: " + result.length());
 
-            int responseCode = con.getResponseCode();
+                if (result.length() > 0) {
+                    for (int i = 0; i < result.length(); i++) {
+                        try {
+                            Log.i("Parsing JSONArray", "Current: " + i);
+                            JSONObject obj = result.getJSONObject(i);
+                            String name = obj.getString("title");
+                            Log.i("Parsing JSONArray", "Name: " + name);
+                            recipeAdapter.add(name);
+                        } catch (Exception e) {
+                            Log.i("Parsing JSONArray", e.getMessage());
+                        }
+                    }
+                } else {
+                    recipeAdapter.add("No recipes found");
+                }
 
-            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-            String inputLine;
-            StringBuffer response = new StringBuffer();
-
-            while ((inputLine = in.readLine()) != null) {
-                response.append(inputLine);
+                Log.i("SearchList", "Updated");
+                recipeAdapter.notifyDataSetChanged();
+            } else {
+                Log.d("http", "API request failed");
             }
-            in.close();
-
-            Log.d("http", response.toString());
-
-            arr = new JSONArray(response.toString());
-        }catch( Exception e) {
-            e.printStackTrace();
         }
-        finally {
-            con.disconnect();
-        }
-        return arr;
     }
 }

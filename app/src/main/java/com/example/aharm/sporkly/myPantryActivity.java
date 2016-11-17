@@ -1,6 +1,7 @@
 package com.example.aharm.sporkly;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -33,7 +34,7 @@ import java.util.ArrayList;
 
 public class myPantryActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener{
     private static final String API_KEY = "9rUDYWAnkEmshQkuvwanU54zDmXDp15QkyljsnQa9nVIoFwLY8";
-    private static final String PANTRY_FILE = "myPantry.txt";
+    private static final String[] CONTEXT_OPTIONS = { "Delete Entry", "Move to Shopping List",  "Return" };
 
     ListStorage pantryStorage;
     ListStorage shoppingStorage;
@@ -47,10 +48,8 @@ public class myPantryActivity extends AppCompatActivity implements View.OnClickL
     ArrayAdapter<String> pantryAdapter;
 
     //Array for search results.
-    ArrayList<String> searchItems = new ArrayList<String>();
+    ArrayList<String> searchItems = new ArrayList<>();
     ArrayAdapter<String> searchAdapter;
-
-    HttpURLConnection con;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,15 +65,15 @@ public class myPantryActivity extends AppCompatActivity implements View.OnClickL
         searchList = (ListView)findViewById(R.id.pantrySearchList);
 
         // Initialize data for the ingredients list view.
-        pantryAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, pantryStorage.getItems());
+        pantryAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, pantryStorage.getItems());
         pantryList.setAdapter(pantryAdapter);
 
         // Enable context menu on the list, so we can remove list items.
         registerForContextMenu(pantryList);
 
         // Initialize data for the search list view.
-        searchItems = new ArrayList<String>();
-        searchAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, searchItems);
+        searchItems = new ArrayList<>();
+        searchAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, searchItems);
         searchList.setAdapter(searchAdapter);
         searchList.setTranscriptMode(ListView.TRANSCRIPT_MODE_NORMAL);
         searchList.setStackFromBottom(false);
@@ -101,15 +100,9 @@ public class myPantryActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        if(v.getId() != R.id.pantryIngredientList){
-            return;
-        }
-
         menu.setHeaderTitle("What do you want??");
 
-        String[] options = { "Delete Entry", "Return" };
-
-        for(String option : options){
+        for(String option : CONTEXT_OPTIONS){
             menu.add(option);
         }
     }
@@ -118,9 +111,13 @@ public class myPantryActivity extends AppCompatActivity implements View.OnClickL
     public boolean onContextItemSelected(MenuItem item) {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         int selectedIndex = info.position;
+        CharSequence option = item.getTitle();
 
-        if(item.getTitle().equals("Delete Entry")){
+        if (option.equals(CONTEXT_OPTIONS[0])) {
             pantryStorage.remove(selectedIndex);
+            pantryAdapter.notifyDataSetChanged();
+        } else if (option.equals(CONTEXT_OPTIONS[1])) {
+            shoppingStorage.add(pantryStorage.remove(selectedIndex));
             pantryAdapter.notifyDataSetChanged();
         }
 
@@ -133,7 +130,7 @@ public class myPantryActivity extends AppCompatActivity implements View.OnClickL
             case R.id.pantryAddButton:
                 Log.i("pantryAddButton", "clicked");
 
-                searchForIngredients(editText.getText().toString());
+                new SearchForIngredientsTask().execute(editText.getText().toString());
 
                 // This forces the keyboard to hide, because for some reason
                 // the keyboard showing makes the search results not show.
@@ -143,55 +140,6 @@ public class myPantryActivity extends AppCompatActivity implements View.OnClickL
             default:
                 break;
         }
-    }
-
-    private void searchForIngredients(final String query) {
-        new Thread(new Runnable() {
-            public void run() {
-                if(query.length() > 1) {
-                    Log.i("pantryAddButton", "clicked");
-
-                    // Real query
-                    final JSONArray arr = requestAutoCompleteIngredients(false, 5, query);
-
-                    // Test query
-                    /*JSONArray testArr = null;
-                    try {
-                        testArr = new JSONArray("[{\"name\":\"apple\",\"image\":\"apple.jpg\"}]");
-                    } catch (Exception e) {
-
-                    }
-                    final JSONArray arr = testArr;*/
-
-                    searchList.post(new Runnable() {
-                        public void run() {
-                            searchAdapter.clear();
-                            Log.i("Parsing JSONArray", "Length: " + arr.length());
-
-                            if (arr != null) {
-                                for (int i=0; i < arr.length(); i++)
-                                {
-                                    try {
-                                        Log.i("Parsing JSONArray", "Current: " + i);
-                                        JSONObject obj = arr.getJSONObject(i);
-                                        String name = obj.getString("name");
-                                        Log.i("Parsing JSONArray", "Name: " + name);
-                                        searchAdapter.add(name);
-                                    } catch (Exception e) {
-                                        Log.i("Parsing JSONArray", e.getMessage());
-                                    }
-                                }
-                            }
-
-                            Log.i("SearchList", "Updated");
-                            searchAdapter.notifyDataSetChanged();
-
-                            resizeSearchResults();
-                        }
-                    });
-                }
-            }
-        }).start();
     }
 
     private void resizeSearchResults() {
@@ -217,41 +165,78 @@ public class myPantryActivity extends AppCompatActivity implements View.OnClickL
         searchList.requestLayout();
     }
 
-    private JSONArray requestAutoCompleteIngredients(boolean metaInfo, int number, String query) {
-        JSONArray arr = null;
-        try {
-            URL url = new URL("https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/food/ingredients/autocomplete?" +
-                    "metaInformation=" + metaInfo +
-                    "&number=" + number +
-                    "&query=" + query);
+    private class SearchForIngredientsTask extends AsyncTask<String, Void, Boolean> {
+        JSONArray result;
 
-            con = (HttpURLConnection) url.openConnection();
-            con.setRequestMethod("GET");
+        protected Boolean doInBackground(String... query) {
+            try {
+                URL url = new URL("https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/food/ingredients/autocomplete?" +
+                        "metaInformation=" + false +
+                        "&number=" + 5 +
+                        "&query=" + query[0]);
 
-            // Add header properties, such as api key
-            con.setRequestProperty("X-Mashape-Key", API_KEY);
-            con.setRequestProperty("Accept", "application/json");
+                HttpURLConnection con = (HttpURLConnection) url.openConnection();
+                con.setRequestMethod("GET");
 
-            int responseCode = con.getResponseCode();
+                // Add header properties, such as api key
+                con.setRequestProperty("X-Mashape-Key", API_KEY);
+                con.setRequestProperty("Accept", "application/json");
 
-            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-            String inputLine;
-            StringBuffer response = new StringBuffer();
+                int responseCode = con.getResponseCode();
 
-            while ((inputLine = in.readLine()) != null) {
-                response.append(inputLine);
+                BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                con.disconnect();
+
+                String inputLine;
+                StringBuilder response = new StringBuilder();
+
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
+                }
+                in.close();
+
+                Log.d("http", response.toString());
+
+                result = new JSONArray(response.toString());
+
+                return true;
+            }catch( Exception e) {
+                e.printStackTrace();
             }
-            in.close();
 
-            Log.d("http", response.toString());
+            return false;
+        }
 
-            arr = new JSONArray(response.toString());
-        }catch( Exception e) {
-            e.printStackTrace();
+        protected void onPostExecute(Boolean success) {
+            Log.d("onPostExecute", "" + success);
+
+            if (success) {
+                searchAdapter.clear();
+                Log.i("Parsing JSONArray", "Length: " + result.length());
+
+                if (result.length() > 0) {
+                    for (int i = 0; i < result.length(); i++) {
+                        try {
+                            Log.i("Parsing JSONArray", "Current: " + i);
+                            JSONObject obj = result.getJSONObject(i);
+                            String name = obj.getString("name");
+                            Log.i("Parsing JSONArray", "Name: " + name);
+                            searchAdapter.add(name);
+                        } catch (Exception e) {
+                            Log.i("Parsing JSONArray", e.getMessage());
+                        }
+                    }
+                } else {
+                    searchAdapter.add("No ingredients found");
+                }
+
+                Log.i("SearchList", "Updated");
+                searchAdapter.notifyDataSetChanged();
+
+                resizeSearchResults();
+            } else {
+                Log.d("http", "API request failed");
+            }
         }
-        finally {
-            con.disconnect();
-        }
-        return arr;
     }
 }

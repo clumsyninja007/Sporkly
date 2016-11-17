@@ -47,7 +47,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(new Intent(MainActivity.this, myShoppingListActivity.class));
                 break;
             case R.id.recipeSearch:
-                Log.i("recipe", "clicked");
                 startActivity(new Intent(MainActivity.this, myRecipeSearchActivity.class));
                 break;
             default:
