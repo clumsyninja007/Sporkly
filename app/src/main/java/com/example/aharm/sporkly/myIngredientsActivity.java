@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -27,9 +28,7 @@ import java.util.ArrayList;
  * Written by: David Sides, Archer Harmony
  */
 
-public class myIngredientsActivity extends AppCompatActivity implements View.OnClickListener {
-    private static final String API_KEY = "9rUDYWAnkEmshQkuvwanU54zDmXDp15QkyljsnQa9nVIoFwLY8";
-
+public class myIngredientsActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
     ListView recipeList;
     Button recipeButton;
     EditText recipeText;
@@ -37,6 +36,8 @@ public class myIngredientsActivity extends AppCompatActivity implements View.OnC
     //Array for list of recipes
     ArrayList<String> recipeItems =new ArrayList<>();
     ArrayAdapter<String> recipeAdapter;
+
+    int[] recipeIDs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +54,7 @@ public class myIngredientsActivity extends AppCompatActivity implements View.OnC
         recipeList.setAdapter(recipeAdapter);
 
         recipeButton.setOnClickListener(this);
-
+        recipeList.setOnItemClickListener(this);
     }
 
     @Override
@@ -74,6 +75,13 @@ public class myIngredientsActivity extends AppCompatActivity implements View.OnC
         }
     }
 
+    @Override
+    public void onItemClick(AdapterView<?> adapter, View view, int position, long id) {
+        Log.i("recipeList", "clicked");
+
+        ((MyApplication) this.getApplication()).viewRecipe(this, recipeIDs[position]);
+    }
+
     private class SearchByIngredientsTask extends AsyncTask<String, Void, Boolean> {
         JSONArray result;
 
@@ -92,7 +100,7 @@ public class myIngredientsActivity extends AppCompatActivity implements View.OnC
                 con.setRequestMethod("GET");
 
                 // Add header properties, such as api key
-                con.setRequestProperty("X-Mashape-Key", API_KEY);
+                con.setRequestProperty("X-Mashape-Key", ((MyApplication) myIngredientsActivity.this.getApplication()).getAPIKey());
                 con.setRequestProperty("Accept", "application/json");
 
                 int responseCode = con.getResponseCode();
@@ -129,13 +137,19 @@ public class myIngredientsActivity extends AppCompatActivity implements View.OnC
                 Log.i("Parsing JSONArray", "Length: " + result.length());
 
                 if (result.length() > 0) {
+                    recipeIDs = new int[result.length()];
                     for (int i = 0; i < result.length(); i++) {
                         try {
                             Log.i("Parsing JSONArray", "Current: " + i);
                             JSONObject obj = result.getJSONObject(i);
                             String name = obj.getString("title");
+                            int id = obj.getInt("id");
+
                             Log.i("Parsing JSONArray", "Name: " + name);
+                            Log.i("Parsing JSONArray", "ID: " + id);
+
                             recipeAdapter.add(name);
+                            recipeIDs[i] = id;
                         } catch (Exception e) {
                             Log.i("Parsing JSONArray", e.getMessage());
                         }

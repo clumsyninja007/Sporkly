@@ -33,7 +33,6 @@ import java.util.ArrayList;
  */
 
 public class myPantryActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener{
-    private static final String API_KEY = "9rUDYWAnkEmshQkuvwanU54zDmXDp15QkyljsnQa9nVIoFwLY8";
     private static final String[] CONTEXT_OPTIONS = { "Delete Entry", "Move to Shopping List",  "Return" };
 
     ListStorage pantryStorage;
@@ -179,7 +178,7 @@ public class myPantryActivity extends AppCompatActivity implements View.OnClickL
                 con.setRequestMethod("GET");
 
                 // Add header properties, such as api key
-                con.setRequestProperty("X-Mashape-Key", API_KEY);
+                con.setRequestProperty("X-Mashape-Key", ((MyApplication) myPantryActivity.this.getApplication()).getAPIKey());
                 con.setRequestProperty("Accept", "application/json");
 
                 int responseCode = con.getResponseCode();

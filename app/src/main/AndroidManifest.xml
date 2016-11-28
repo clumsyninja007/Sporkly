@@ -20,8 +20,9 @@
         <activity android:name=".myPantryActivity" android:label="@string/myPantryLabel"></activity>
         <activity android:name=".myShoppingListActivity" android:label="@string/myShoppingListLabel"></activity>
         <activity android:name=".myRecipeSearchActivity" android:label="@string/recipeSearchButton"></activity>
+        <activity android:name=".RecipeView" android:label="@string/recipeViewLabel"></activity>
     </application>
 
-    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
+    <uses-permission android:name="android.permission.INTERNET" />
 
 </manifest>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="1">
+
+    <TextView
+        android:text="Failed to load recipe"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/recipeLoadFailed"
+        android:gravity="center_vertical"
+        android:textSize="30sp"
+        android:textAlignment="center"
+        android:visibility="gone" />
+
+    <ProgressBar
+        style="@android:style/Widget.Material.ProgressBar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/recipeLoadProgress"
+        android:indeterminate="false"
+        android:visibility="visible" />
+
+    <ScrollView android:id="@+id/ScrollView01"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:weightSum="1">
+            <TextView
+                android:text="Loading Recipe..."
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/recipeTitle"
+                android:background="#4286f4"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title.Inverse"
+                android:textAlignment="center"
+                android:padding="5sp" />
+
+            <ListView
+                android:layout_width="match_parent"
+                android:layout_height="147dp"
+                android:id="@+id/recipeInfo"
+                style="@style/Widget.AppCompat.ListView" />
+
+            <TextView
+                android:text="Ingredients"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#4286f4"
+                android:id="@+id/recipeIngredientsTitle"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title.Inverse"
+                android:textAlignment="center"
+                android:padding="5sp" />
+
+            <ListView
+                android:layout_width="match_parent"
+                android:id="@+id/recipeIngredients"
+                android:layout_height="1dp" />
+
+            <TextView
+                android:text="Instructions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/recipeInstructionsTitle"
+                android:background="#4286f4"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title.Inverse"
+                android:textAlignment="center"
+                android:padding="5dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/recipeInstructions"
+                android:text="Loading Instructions..." />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

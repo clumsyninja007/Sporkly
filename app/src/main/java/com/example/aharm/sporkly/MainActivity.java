@@ -32,22 +32,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         pantry.setOnClickListener(this);
         shoppingList.setOnClickListener(this);
         recipeSearch.setOnClickListener(this);
+
+        //((MyApplication) this.getApplication()).viewRecipe(this, 721001);
     }
 
     @Override
     public void onClick(View view) {
         switch(view.getId()) {
             case R.id.myIngredients:
-                startActivity(new Intent(MainActivity.this, myIngredientsActivity.class));
+                startActivity(new Intent(this, myIngredientsActivity.class));
                 break;
             case R.id.myPantry:
-                startActivity(new Intent(MainActivity.this, myPantryActivity.class));
+                startActivity(new Intent(this, myPantryActivity.class));
                 break;
             case R.id.myShoppingList:
-                startActivity(new Intent(MainActivity.this, myShoppingListActivity.class));
+                startActivity(new Intent(this, myShoppingListActivity.class));
                 break;
             case R.id.recipeSearch:
-                startActivity(new Intent(MainActivity.this, myRecipeSearchActivity.class));
+                startActivity(new Intent(this, myRecipeSearchActivity.class));
                 break;
             default:
                 break;

@@ -10,6 +10,7 @@
     <string name="myPantryLabel">My Pantry</string>
     <string name="myShoppingListLabel">My Shopping List</string>
     <string name="recipeSearchLabel">Recipe Search</string>
+    <string name="recipeViewLabel">Recipe View</string>
 
     <string name="shoppingHint">Enter Ingredient Name</string>
     <string name="shoppingButton">Search Ingredients</string>

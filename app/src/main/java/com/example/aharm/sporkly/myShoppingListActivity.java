@@ -33,7 +33,6 @@ import java.util.ArrayList;
  */
 
 public class myShoppingListActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener{
-    private static final String API_KEY = "9rUDYWAnkEmshQkuvwanU54zDmXDp15QkyljsnQa9nVIoFwLY8";
     private static final String[] CONTEXT_OPTIONS = { "Delete Entry", "Move to Pantry",  "Return" };
 
     ListStorage pantryStorage;
@@ -50,8 +49,6 @@ public class myShoppingListActivity extends AppCompatActivity implements View.On
     //Array for search results.
     ArrayList<String> searchItems = new ArrayList<>();
     ArrayAdapter<String> searchAdapter;
-
-    HttpURLConnection con;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -181,7 +178,7 @@ public class myShoppingListActivity extends AppCompatActivity implements View.On
                 con.setRequestMethod("GET");
 
                 // Add header properties, such as api key
-                con.setRequestProperty("X-Mashape-Key", API_KEY);
+                con.setRequestProperty("X-Mashape-Key", ((MyApplication) myShoppingListActivity.this.getApplication()).getAPIKey());
                 con.setRequestProperty("Accept", "application/json");
 
                 int responseCode = con.getResponseCode();
