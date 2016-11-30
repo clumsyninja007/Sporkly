@@ -1,17 +1,12 @@
 package com.example.aharm.sporkly;
 
-import android.content.Context;
-import android.graphics.Point;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
-import android.webkit.WebView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -19,7 +14,6 @@ import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -217,7 +211,7 @@ public class RecipeView extends AppCompatActivity implements View.OnClickListene
                         JSONObject obj = ingredientsArray.getJSONObject(i);
                         String name = obj.getString("name");
                         String unit = obj.getString("unit");
-                        int amount = obj.getInt("amount");
+                        double amount = obj.getDouble("amount");
 
                         recipeIngredientsAdapter.add(name + ": " + amount + " " + unit);
                     }
