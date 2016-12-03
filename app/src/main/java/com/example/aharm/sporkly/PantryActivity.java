@@ -6,15 +6,18 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.ContextMenu;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -32,7 +35,7 @@ import java.util.ArrayList;
  * Written by: Trevor Dewitt, David Sides
  */
 
-public class myPantryActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener{
+public class PantryActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener, TextView.OnEditorActionListener {
     private static final String[] CONTEXT_OPTIONS = { "Delete Entry", "Move to Shopping List",  "Return" };
 
     MyApplication app;
@@ -86,6 +89,8 @@ public class myPantryActivity extends AppCompatActivity implements View.OnClickL
 
         // Make the search ingredient button clickable
         addButton.setOnClickListener(this);
+
+        editText.setOnEditorActionListener(this);
     }
 
     @Override
@@ -98,7 +103,7 @@ public class myPantryActivity extends AppCompatActivity implements View.OnClickL
         searchAdapter.clear();
         searchAdapter.notifyDataSetChanged();
 
-        resizeSearchResults();
+        searchList.getLayoutParams().height = Util.listViewMeasuredHeight(searchList);
     }
 
     @Override
@@ -145,34 +150,23 @@ public class myPantryActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
-    private void resizeSearchResults() {
-        // Resize search view to item count
-        int numberOfItems = searchAdapter.getCount();
+    @Override
+    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+        if (actionId == EditorInfo.IME_ACTION_DONE) {
+            new SearchForIngredientsTask().execute(editText.getText().toString());
 
-        // Get total height of all items.
-        int totalItemsHeight = 0;
-        for (int itemPos = 0; itemPos < numberOfItems; itemPos++) {
-            View item = searchAdapter.getView(itemPos, null, searchList);
-            item.measure(0, 0);
-            totalItemsHeight += item.getMeasuredHeight();
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+            return true;
         }
-
-        // Get total height of all item dividers.
-        int totalDividersHeight = searchList.getDividerHeight() *
-                (numberOfItems - 1);
-
-        // Set list height.
-        ViewGroup.LayoutParams params = searchList.getLayoutParams();
-        params.height = totalItemsHeight + totalDividersHeight;
-        searchList.setLayoutParams(params);
-        searchList.requestLayout();
+        return false;
     }
 
     private class SearchForIngredientsTask extends AsyncTask<String, Void, Boolean> {
         JSONArray result;
 
         protected Boolean doInBackground(String... query) {
-            result = Util.ApiRequestArray("https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/food/ingredients/autocomplete?" +
+            result = Util.apiRequestArray("https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/food/ingredients/autocomplete?" +
                     "metaInformation=" + false +
                     "&number=" + 5 +
                     "&query=" + query[0]);
@@ -206,7 +200,8 @@ public class myPantryActivity extends AppCompatActivity implements View.OnClickL
                 Log.i("SearchList", "Updated");
                 searchAdapter.notifyDataSetChanged();
 
-                resizeSearchResults();
+                searchList.getLayoutParams().height = Util.listViewMeasuredHeight(searchList);
+                searchList.requestLayout();
             } else {
                 Log.d("http", "API request failed");
             }

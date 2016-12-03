@@ -36,7 +36,7 @@ public class MyApplication extends Application {
         Log.d("ViewingRecipe", Integer.toString(recipeID));
 
         this.recipeID = recipeID;
-        Intent intent = new Intent(activity, RecipeView.class);
+        Intent intent = new Intent(activity, RecipeViewActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }

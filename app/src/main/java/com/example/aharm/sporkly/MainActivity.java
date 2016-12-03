@@ -3,7 +3,6 @@ package com.example.aharm.sporkly;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -40,16 +39,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         switch(view.getId()) {
             case R.id.myIngredients:
-                startActivity(new Intent(this, myIngredientsActivity.class));
+                startActivity(new Intent(this, MyIngredientsActivity.class));
                 break;
             case R.id.myPantry:
-                startActivity(new Intent(this, myPantryActivity.class));
+                startActivity(new Intent(this, PantryActivity.class));
                 break;
             case R.id.myShoppingList:
-                startActivity(new Intent(this, myShoppingListActivity.class));
+                startActivity(new Intent(this, ShoppingListActivity.class));
                 break;
             case R.id.recipeSearch:
-                startActivity(new Intent(this, myRecipeSearchActivity.class));
+                startActivity(new Intent(this, RecipeSearchActivity.class));
                 break;
             default:
                 break;

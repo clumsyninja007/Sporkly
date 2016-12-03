@@ -16,11 +16,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".myIngredientsActivity" android:label="@string/myIngredientLabel"></activity>
-        <activity android:name=".myPantryActivity" android:label="@string/myPantryLabel"></activity>
-        <activity android:name=".myShoppingListActivity" android:label="@string/myShoppingListLabel"></activity>
-        <activity android:name=".myRecipeSearchActivity" android:label="@string/recipeSearchButton"></activity>
-        <activity android:name=".RecipeView" android:label="@string/recipeViewLabel"></activity>
+        <activity android:name=".MyIngredientsActivity" android:label="@string/myIngredientLabel"></activity>
+        <activity android:name=".PantryActivity" android:label="@string/myPantryLabel"></activity>
+        <activity android:name=".ShoppingListActivity" android:label="@string/myShoppingListLabel"></activity>
+        <activity android:name=".RecipeSearchActivity" android:label="@string/recipeSearchButton"></activity>
+        <activity android:name=".RecipeViewActivity" android:label="@string/recipeViewLabel"></activity>
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />

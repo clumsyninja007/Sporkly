@@ -1,12 +1,16 @@
 package com.example.aharm.sporkly;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -22,10 +26,10 @@ import java.net.URL;
 import java.util.ArrayList;
 
 /**
- * Created by David on 11/27/2016.
+ * This class is used to display detailed recipe information.
  */
 
-public class RecipeView extends AppCompatActivity implements View.OnClickListener{
+public class RecipeViewActivity extends AppCompatActivity implements View.OnClickListener {
     MyApplication app;
 
     TextView recipeTitle, recipeIngredientsTitle, recipeInstructionsTitle, recipeInstructions, failedText;
@@ -98,31 +102,23 @@ public class RecipeView extends AppCompatActivity implements View.OnClickListene
         UpdateSizes();
     }
 
+    /*
+     * Updates the heights of the Views that display information relating to
+     * the recipe, if a specific view shouldn't be visible, it sets the height
+     * to a small number so it isn't visible, but if it should be visible, it sets
+     * the height to its content height.
+     */
     private void UpdateSizes() {
         int infoHeight = 6;
         int ingredientsHeight = 6;
         int instructionsHeight = 6;
 
         if (infoVisible) {
-            int count = recipeAdapter.getCount();
-            for (int i = 0; i < count; i++) {
-                View item = recipeAdapter.getView(i, null, recipeInfo);
-                item.measure(0, 0);
-                infoHeight += item.getMeasuredHeight();
-            }
-
-            infoHeight += recipeInfo.getDividerHeight() * (count - 1);
+            infoHeight = Util.listViewMeasuredHeight(recipeInfo);
         }
 
         if (ingredientsVisible) {
-            int count = recipeIngredientsAdapter.getCount();
-            for (int i = 0; i < count; i++) {
-                View item = recipeIngredientsAdapter.getView(i, null, recipeIngredients);
-                item.measure(0, 0);
-                ingredientsHeight += item.getMeasuredHeight();
-            }
-
-            ingredientsHeight += recipeIngredients.getDividerHeight() * (count - 1);
+            ingredientsHeight = Util.listViewMeasuredHeight(recipeIngredients);
         }
 
         if (instructionsVisible) {
@@ -145,7 +141,7 @@ public class RecipeView extends AppCompatActivity implements View.OnClickListene
         protected Boolean doInBackground(Integer... recipeID) {
             for (int i = 0; i < retries; i++) {
                 Log.d("Attempt", Integer.toString(i));
-                result = Util.ApiRequestObject("https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/" +
+                result = Util.apiRequestObject("https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/" +
                         recipeID[0] + "/information?includeNutrition=false");
 
                 if (result != null) {

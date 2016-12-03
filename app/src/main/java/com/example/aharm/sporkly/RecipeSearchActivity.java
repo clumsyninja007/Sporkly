@@ -5,13 +5,16 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -26,7 +29,7 @@ import java.util.ArrayList;
  * Created by David on 11/16/2016.
  */
 
-public class myRecipeSearchActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
+public class RecipeSearchActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener, TextView.OnEditorActionListener {
     MyApplication app;
 
     ListView recipeList;
@@ -57,6 +60,7 @@ public class myRecipeSearchActivity extends AppCompatActivity implements View.On
 
         recipeButton.setOnClickListener(this);
         recipeList.setOnItemClickListener(this);
+        recipeText.setOnEditorActionListener(this);
     }
 
     @Override
@@ -84,11 +88,23 @@ public class myRecipeSearchActivity extends AppCompatActivity implements View.On
         app.viewRecipe(this, recipeIDs[position]);
     }
 
+    @Override
+    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+        if (actionId == EditorInfo.IME_ACTION_DONE) {
+            new SearchForRecipesTask().execute(recipeText.getText().toString());
+
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+            return true;
+        }
+        return false;
+    }
+
     private class SearchForRecipesTask extends AsyncTask<String, Void, Boolean> {
         JSONArray result;
 
         protected Boolean doInBackground(String... query) {
-            result = Util.ApiRequestArray("https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/autocomplete?" +
+            result = Util.apiRequestArray("https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/autocomplete?" +
                     "number=" + 5 +
                     "&query=" + query[0]);
 

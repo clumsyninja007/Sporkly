@@ -1,6 +1,12 @@
 package com.example.aharm.sporkly;
 
+import android.content.Context;
 import android.util.Log;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -17,7 +23,7 @@ import java.net.URL;
 public class Util {
     static MyApplication app;
 
-    static JSONArray ApiRequestArray(String urlString) {
+    static JSONArray apiRequestArray(String urlString) {
         try {
             URL url = new URL(urlString);
 
@@ -51,7 +57,7 @@ public class Util {
         return null;
     }
 
-    static JSONObject ApiRequestObject(String urlString) {
+    static JSONObject apiRequestObject(String urlString) {
         try {
             URL url = new URL(urlString);
 
@@ -83,5 +89,19 @@ public class Util {
         }
 
         return null;
+    }
+
+    static int listViewMeasuredHeight(ListView view) {
+        int height = 0;
+
+        ListAdapter adapter = view.getAdapter();
+        int count = adapter.getCount();
+        for (int i = 0; i < count; i++) {
+            View item = adapter.getView(i, null, view);
+            item.measure(0, 0);
+            height += item.getMeasuredHeight();
+        }
+
+        return height + view.getDividerHeight() * (count - 1);
     }
 }
