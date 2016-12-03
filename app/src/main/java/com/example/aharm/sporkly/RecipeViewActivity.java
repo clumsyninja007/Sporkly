@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -24,6 +25,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * This class is used to display detailed recipe information.
@@ -32,11 +34,16 @@ import java.util.ArrayList;
 public class RecipeViewActivity extends AppCompatActivity implements View.OnClickListener {
     MyApplication app;
 
+    ListStorage favoritesStorage;
+
     TextView recipeTitle, recipeIngredientsTitle, recipeInstructionsTitle, recipeInstructions, failedText;
     ListView recipeInfo, recipeIngredients;
     ProgressBar recipeLoad;
+    Button recipeAddFavorite;
 
     int recipeID;
+
+    JSONObject recipeData;
 
     //Array for recipe info
     ArrayList<String> recipeInfoList = new ArrayList<>();
@@ -57,6 +64,8 @@ public class RecipeViewActivity extends AppCompatActivity implements View.OnClic
 
         app = (MyApplication)this.getApplication();
 
+        favoritesStorage = app.getFavoritesStorage();
+
         recipeTitle = (TextView) findViewById(R.id.recipeTitle);
         recipeIngredientsTitle = (TextView) findViewById(R.id.recipeIngredientsTitle);
         recipeInstructionsTitle = (TextView) findViewById(R.id.recipeInstructionsTitle);
@@ -65,6 +74,7 @@ public class RecipeViewActivity extends AppCompatActivity implements View.OnClic
         recipeInfo = (ListView) findViewById(R.id.recipeInfo);
         recipeIngredients = (ListView) findViewById(R.id.recipeIngredients);
         recipeLoad = (ProgressBar) findViewById(R.id.recipeLoadProgress);
+        recipeAddFavorite = (Button) findViewById(R.id.recipeAddFavorite);
 
         recipeInfoList = new ArrayList<>();
         recipeAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, recipeInfoList);
@@ -74,11 +84,14 @@ public class RecipeViewActivity extends AppCompatActivity implements View.OnClic
         recipeIngredientsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, recipeIngredientsList);
         recipeIngredients.setAdapter(recipeIngredientsAdapter);
 
-        recipeID = app.getRecipeID();
-
         recipeTitle.setOnClickListener(this);
         recipeIngredientsTitle.setOnClickListener(this);
         recipeInstructionsTitle.setOnClickListener(this);
+        recipeAddFavorite.setOnClickListener(this);
+
+        recipeLoad.setVisibility(View.VISIBLE);
+
+        recipeID = app.getRecipeID();
 
         new ViewRecipeTask().execute(recipeID);
     }
@@ -95,6 +108,28 @@ public class RecipeViewActivity extends AppCompatActivity implements View.OnClic
             case R.id.recipeInstructionsTitle:
                 instructionsVisible = !instructionsVisible;
                 break;
+            case R.id.recipeAddFavorite:
+                try {
+                    String title = recipeData.getString("title");
+                    int id = recipeData.getInt("id");
+                    int index = favoritesStorage.find(title);
+
+                    if (index != -1) {
+                        favoritesStorage.remove(index);
+
+                        recipeAddFavorite.setText("Add to favorites");
+                    } else {
+                        JSONObject obj = new JSONObject();
+                        obj.put("id", id);
+
+                        favoritesStorage.add(title, obj);
+
+                        recipeAddFavorite.setText("Remove from favorites");
+                    }
+
+                } catch (Exception e) {
+                    Log.e("JSON", e.toString());
+                }
             default:
                 break;
         }
@@ -134,6 +169,42 @@ public class RecipeViewActivity extends AppCompatActivity implements View.OnClic
         recipeInstructions.requestLayout();
     }
 
+    /*
+     * Updates the instructions text view, by formating the
+     * raw instructions string returned from the api, so it is
+     * more easily readable.
+     * @param instructions the instructions string
+     * @return the formatted instructions
+     */
+    private String UpdateInstructions(String instructions) {
+        StringBuilder sb = new StringBuilder();
+
+        char first = instructions.charAt(0);
+        if (first != ' ') {
+            sb.append(first);
+        }
+
+        for (int i = 1; i < instructions.length(); i++) {
+            char c = instructions.charAt(i);
+            char p = instructions.charAt(i - 1);
+
+            if (p == '.') {
+                sb.append('\n');
+                sb.append('\n');
+            } else if (p == ':'){
+                sb.append('\n');
+            } else if (Character.isLowerCase(p) && Character.isUpperCase(c)) {
+                sb.append('\n');
+            }
+
+            if (c != ' ' || p != ' ') {
+                sb.append(c);
+            }
+        }
+
+        return sb.toString();
+    }
+
     private class ViewRecipeTask extends AsyncTask<Integer, Void, Boolean> {
         JSONObject result = null;
         int retries = 5;
@@ -145,18 +216,23 @@ public class RecipeViewActivity extends AppCompatActivity implements View.OnClic
                     if (recipeID[0] != 0) {
                         // Get specific recipe if recipe id is not 0
                         result = app.apiRequestObject("https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/" +
-                                recipeID[0] + "/information?includeNutrition=false");
+                                recipeID[0] +
+                                "/information?includeNutrition=false");
                     } else {
                         // Get random recipe if recipe id is 0
-                        result = app.apiRequestObject("https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/random").getJSONArray("recipes").getJSONObject(0);
+                        result = app.apiRequestObject("https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/random?limitLicense=false&number=1");
+                        if (result != null) {
+                            result = result.getJSONArray("recipes").getJSONObject(0);
+                        }
                     }
 
                     if (result != null) {
                         return true;
                     }
                 } catch (Exception e) {
-                    return false;
+                    Log.e("ViewRecipe", e.toString());
                 }
+                SystemClock.sleep(3000);
             }
 
             return false;
@@ -191,7 +267,8 @@ public class RecipeViewActivity extends AppCompatActivity implements View.OnClic
                         recipeIngredientsAdapter.add(name + ": " + amount + " " + unit);
                     }
 
-                    recipeInstructions.setText(instructions);
+                    //UpdateInstructions(instructions);
+                    recipeInstructions.setText(UpdateInstructions(instructions));
 
                     UpdateSizes();
 
@@ -201,6 +278,12 @@ public class RecipeViewActivity extends AppCompatActivity implements View.OnClic
                         recipeInstructionsTitle.setVisibility(View.GONE);
                     }
 
+                    if (favoritesStorage.find(title) != -1) {
+                        recipeAddFavorite.setText("Remove from favorites");
+                    }
+
+                    recipeData = result;
+
                 } catch (Exception e) {
                     failedText.setVisibility(View.VISIBLE);
                     Log.e("Parsing JSONObject", e.getMessage());
@@ -209,8 +292,6 @@ public class RecipeViewActivity extends AppCompatActivity implements View.OnClic
                 failedText.setVisibility(View.VISIBLE);
                 Log.e("http", "API request failed");
             }
-
-
         }
     }
 }

@@ -24,6 +24,7 @@ public class MyApplication extends Application {
     private static final String API_KEY = "9rUDYWAnkEmshQkuvwanU54zDmXDp15QkyljsnQa9nVIoFwLY8";
     private ListStorage pantryStorage = new ListStorage(this, "my_pantry.txt");
     private ListStorage shoppingStorage = new ListStorage(this, "my_shopping_list.txt");
+    private ListStorage favoritesStorage = new ListStorage(this, "my_favorites.txt");
 
     private int recipeID;
 
@@ -32,7 +33,7 @@ public class MyApplication extends Application {
         super.onCreate();
         pantryStorage.load();
         shoppingStorage.load();
-
+        favoritesStorage.load();
     }
 
     public ListStorage getPantryStorage() {
@@ -41,6 +42,10 @@ public class MyApplication extends Application {
 
     public ListStorage getShoppingStorage() {
         return shoppingStorage;
+    }
+
+    public ListStorage getFavoritesStorage() {
+        return favoritesStorage;
     }
 
     public void viewRecipe(AppCompatActivity activity, int recipeID) {
@@ -58,8 +63,10 @@ public class MyApplication extends Application {
 
     public int getRecipeID() {return recipeID;}
 
-    static String httpRequest(String urlString) {
+    String httpRequest(String urlString) {
         try {
+            Log.d("url", urlString);
+
             URL url = new URL(urlString);
 
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
@@ -86,41 +93,41 @@ public class MyApplication extends Application {
 
             return response.toString();
         }catch( Exception e) {
-            e.printStackTrace();
+            Log.e("httpRequest", e.toString());
         }
 
         return "";
     }
 
-    static JSONArray apiRequestArray(String urlString) {
+    JSONArray apiRequestArray(String urlString) {
         String response = httpRequest(urlString);
 
         if (response != "") {
             try {
-                return new JSONArray(httpRequest(urlString));
+                return new JSONArray(response);
             } catch (Exception e) {
-                e.printStackTrace();
+                Log.e("apiRequestArray", e.toString());
             }
         }
 
         return null;
     }
 
-    static JSONObject apiRequestObject(String urlString) {
+    JSONObject apiRequestObject(String urlString) {
         String response = httpRequest(urlString);
 
         if (response != "") {
             try {
-                return new JSONObject(httpRequest(urlString));
+                return new JSONObject(response);
             } catch (Exception e) {
-                e.printStackTrace();
+                Log.e("apiRequestObject", e.toString());
             }
         }
 
         return null;
     }
 
-    static int listViewMeasuredHeight(ListView view) {
+    int listViewMeasuredHeight(ListView view) {
         int height = 0;
 
         ListAdapter adapter = view.getAdapter();

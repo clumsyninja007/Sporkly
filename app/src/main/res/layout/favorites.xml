@@ -4,4 +4,18 @@
     android:layout_height="match_parent"
     android:id="@+id/favorites">
 
+    <TextView
+        android:text="Favorite Recipes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/favoritesText"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title.Inverse"
+        android:textAlignment="center"
+        android:background="#4286f4"
+        android:textSize="20sp" />
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/favoritesList" />
 </LinearLayout>

@@ -61,7 +61,6 @@ public class ListStorageTest {
     public void remove() throws Exception {
         ArrayList<String> items = listStorage.getItems();
 
-        assertEquals("Remove should return TestItem", "TestItem", listStorage.remove(0));
         assertEquals("Size should be 0", 0, items.size());
     }
 

@@ -22,11 +22,11 @@
         android:layout_height="match_parent"
         android:id="@+id/recipeLoadProgress"
         android:indeterminate="false"
-        android:visibility="visible" />
+        android:visibility="gone" />
 
     <ScrollView android:id="@+id/ScrollView01"
         android:layout_width="fill_parent"
-        android:layout_height="match_parent">
+        android:layout_height="528dp">
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:tools="http://schemas.android.com/tools"
@@ -79,7 +79,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/recipeInstructions"
-                android:text="Loading Instructions..." />
+                android:text="Loading Instructions..."
+                android:padding="5dp" />
         </LinearLayout>
     </ScrollView>
+
+    <Button
+        android:text="Add to Favorites"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/recipeAddFavorite" />
+
 </LinearLayout>

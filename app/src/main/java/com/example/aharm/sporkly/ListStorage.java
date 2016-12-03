@@ -3,6 +3,9 @@ package com.example.aharm.sporkly;
 import android.content.Context;
 import android.util.Log;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -13,6 +16,7 @@ import java.util.Scanner;
 
 class ListStorage {
     private ArrayList<String> items = new ArrayList<>();
+    private ArrayList<JSONObject> data = new ArrayList<>();
     private Context context;
     private String fileName;
 
@@ -29,22 +33,105 @@ class ListStorage {
         return items;
     }
 
-    boolean add(String item) {
-        boolean success = items.add(item);
-
-        if (success) {
-            save();
-        }
-
-        return success;
+    JSONObject getData (int index) {
+        return data.get(index);
     }
 
-    String remove(int index) {
-        String removedString = items.remove(index);
+    void refresh() {
+        items.clear();
+        for (JSONObject obj : data) {
+            try{
+                items.add(obj.getString("text"));
+            } catch (Exception e) {
+                Log.e("refresh", e.getMessage());
+            }
+        }
+    }
 
+    boolean add(String text) {
+        try{
+            JSONObject obj = new JSONObject();
+
+            obj.put("text", text);
+
+            boolean success = data.add(obj);
+
+            if (success) {
+                save();
+                refresh();
+                return true;
+
+            }
+        } catch (Exception e) {
+            Log.e("add", e.getMessage());
+        }
+
+        return false;
+    }
+
+    boolean add(JSONObject objAdd) {
+        try{
+            JSONObject obj = new JSONObject(objAdd.toString());
+
+            boolean success = data.add(obj);
+
+            if (success) {
+                save();
+                refresh();
+                return true;
+
+            }
+        } catch (Exception e) {
+            Log.e("add", e.getMessage());
+        }
+
+        return false;
+    }
+
+    boolean add(String text, JSONObject objAdd) {
+        try{
+            JSONObject obj = new JSONObject(objAdd.toString());
+
+            obj.put("text", text);
+
+            boolean success = data.add(obj);
+
+            if (success) {
+                save();
+                refresh();
+                return true;
+
+            }
+        } catch (Exception e) {
+            Log.e("add", e.getMessage());
+        }
+
+        return false;
+    }
+
+    int find(String text) {
+        for (int i = 0; i < data.size(); i++) {
+            try{
+                JSONObject obj = data.get(i);
+
+                if (obj.getString("text") == text) {
+                    return i;
+                }
+            } catch (Exception e) {
+                Log.e("refresh", e.getMessage());
+            }
+        }
+
+        return -1;
+    }
+
+    JSONObject remove(int index) {
+        JSONObject obj = data.remove(index);
+
+        refresh();
         save();
 
-        return removedString;
+        return obj;
     }
 
     boolean save() {
@@ -53,15 +140,18 @@ class ListStorage {
         try{
             PrintWriter pw = new PrintWriter(context.openFileOutput(fileName, Context.MODE_PRIVATE));
 
-            for(String toDo : items){
-                Log.i("Saving", toDo);
-                pw.println(toDo);
+            for(JSONObject obj : data){
+                String str = obj.toString();
+                Log.i("Saving", str);
+                if (obj.has("text")) {
+                    pw.println(str);
+                }
             }
             pw.close();
 
             return true;
         } catch (Exception e) {
-            Log.i("Error:", e.getMessage());
+            Log.e("save", e.getMessage());
         }
 
         return false;
@@ -76,18 +166,32 @@ class ListStorage {
             Scanner scanner = new Scanner(context.openFileInput(fileName));
 
             while (scanner.hasNextLine()) {
-                String toDo = scanner.nextLine();
-                Log.i("Loading", toDo);
+                String str = scanner.nextLine();
 
-                items.add(toDo);
+                JSONObject obj = new JSONObject(str);
+
+                Log.i("Loading", str);
+
+                if (obj.has("text")) {
+                    data.add(obj);
+                }
             }
             scanner.close();
 
+            refresh();
+
             return true;
         } catch (Exception e) {
-            Log.i("loadPantry", e.getMessage());
+            Log.e("load", e.getMessage());
         }
 
+        clear();
+
         return false;
+    }
+
+    void clear() {
+        data.clear();
+        save();
     }
 }
