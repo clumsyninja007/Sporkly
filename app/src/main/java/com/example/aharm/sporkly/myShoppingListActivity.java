@@ -35,6 +35,8 @@ import java.util.ArrayList;
 public class myShoppingListActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener{
     private static final String[] CONTEXT_OPTIONS = { "Delete Entry", "Move to Pantry",  "Return" };
 
+    MyApplication app;
+
     ListStorage pantryStorage;
     ListStorage shoppingStorage;
 
@@ -55,8 +57,10 @@ public class myShoppingListActivity extends AppCompatActivity implements View.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.my_shopping_list);
 
-        pantryStorage = ((MyApplication) this.getApplication()).getPantryStorage();
-        shoppingStorage = ((MyApplication) this.getApplication()).getShoppingStorage();
+        app = ((MyApplication) this.getApplication());
+
+        pantryStorage = app.getPantryStorage();
+        shoppingStorage = app.getShoppingStorage();
 
         addButton = (Button)findViewById(R.id.shoppingButton);
         editText = (EditText)findViewById(R.id.shoppingEditText);
@@ -168,42 +172,12 @@ public class myShoppingListActivity extends AppCompatActivity implements View.On
         JSONArray result;
 
         protected Boolean doInBackground(String... query) {
-            try {
-                URL url = new URL("https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/food/ingredients/autocomplete?" +
-                        "metaInformation=" + false +
-                        "&number=" + 5 +
-                        "&query=" + query[0]);
+            result = Util.ApiRequestArray("https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/food/ingredients/autocomplete?" +
+                    "metaInformation=" + false +
+                    "&number=" + 5 +
+                    "&query=" + query[0]);
 
-                HttpURLConnection con = (HttpURLConnection) url.openConnection();
-                con.setRequestMethod("GET");
-
-                // Add header properties, such as api key
-                con.setRequestProperty("X-Mashape-Key", ((MyApplication) myShoppingListActivity.this.getApplication()).getAPIKey());
-                con.setRequestProperty("Accept", "application/json");
-
-                int responseCode = con.getResponseCode();
-
-                BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-                con.disconnect();
-
-                String inputLine;
-                StringBuilder response = new StringBuilder();
-
-                while ((inputLine = in.readLine()) != null) {
-                    response.append(inputLine);
-                }
-                in.close();
-
-                Log.d("http", response.toString());
-
-                result = new JSONArray(response.toString());
-
-                return true;
-            }catch( Exception e) {
-                e.printStackTrace();
-            }
-
-            return false;
+            return result != null;
         }
 
         protected void onPostExecute(Boolean success) {

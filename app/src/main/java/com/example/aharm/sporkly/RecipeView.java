@@ -26,6 +26,8 @@ import java.util.ArrayList;
  */
 
 public class RecipeView extends AppCompatActivity implements View.OnClickListener{
+    MyApplication app;
+
     TextView recipeTitle, recipeIngredientsTitle, recipeInstructionsTitle, recipeInstructions, failedText;
     ListView recipeInfo, recipeIngredients;
     ProgressBar recipeLoad;
@@ -49,6 +51,8 @@ public class RecipeView extends AppCompatActivity implements View.OnClickListene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.recipe_view);
 
+        app = ((MyApplication) this.getApplication());
+
         recipeTitle = (TextView) findViewById(R.id.recipeTitle);
         recipeIngredientsTitle = (TextView) findViewById(R.id.recipeIngredientsTitle);
         recipeInstructionsTitle = (TextView) findViewById(R.id.recipeInstructionsTitle);
@@ -66,7 +70,7 @@ public class RecipeView extends AppCompatActivity implements View.OnClickListene
         recipeIngredientsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, recipeIngredientsList);
         recipeIngredients.setAdapter(recipeIngredientsAdapter);
 
-        recipeID = ((MyApplication) this.getApplication()).getRecipeID();
+        recipeID = app.getRecipeID();
 
         recipeTitle.setOnClickListener(this);
         recipeIngredientsTitle.setOnClickListener(this);
@@ -125,19 +129,12 @@ public class RecipeView extends AppCompatActivity implements View.OnClickListene
             instructionsHeight = ViewGroup.LayoutParams.WRAP_CONTENT;;
         }
 
-        ViewGroup.LayoutParams params = recipeInfo.getLayoutParams();
-        params.height = infoHeight;
-        recipeInfo.setLayoutParams(params);
+        recipeInfo.getLayoutParams().height = infoHeight;
+        recipeIngredients.getLayoutParams().height = ingredientsHeight;
+        recipeInstructions.getLayoutParams().height = instructionsHeight;
+
         recipeInfo.requestLayout();
-
-        params = recipeIngredients.getLayoutParams();
-        params.height = ingredientsHeight;
-        recipeIngredients.setLayoutParams(params);
         recipeIngredients.requestLayout();
-
-        params = recipeInstructions.getLayoutParams();
-        params.height = instructionsHeight;
-        recipeInstructions.setLayoutParams(params);
         recipeInstructions.requestLayout();
     }
 
@@ -146,44 +143,16 @@ public class RecipeView extends AppCompatActivity implements View.OnClickListene
         int retries = 5;
 
         protected Boolean doInBackground(Integer... recipeID) {
-            HttpURLConnection con;
-
             for (int i = 0; i < retries; i++) {
                 Log.d("Attempt", Integer.toString(i));
-                try {
-                    URL url = new URL("https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/" +
-                            recipeID[0] + "/information?includeNutrition=false");
+                result = Util.ApiRequestObject("https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/" +
+                        recipeID[0] + "/information?includeNutrition=false");
 
-                    con = (HttpURLConnection) url.openConnection();
-                    con.setRequestMethod("GET");
-
-                    // Add header properties, such as api key
-                    con.setRequestProperty("X-Mashape-Key", ((MyApplication) RecipeView.this.getApplication()).getAPIKey());
-                    con.setRequestProperty("Accept", "application/json");
-
-                    int responseCode = con.getResponseCode();
-
-                    BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-                    con.disconnect();
-
-                    String inputLine;
-                    StringBuilder response = new StringBuilder();
-
-                    while ((inputLine = in.readLine()) != null) {
-                        response.append(inputLine);
-                    }
-                    in.close();
-
-                    Log.d("http", response.toString());
-
-                    result = new JSONObject(response.toString());
-
+                if (result != null) {
                     return true;
-                } catch (Exception e) {
-                    Log.e("http", "HTTP request failed");
                 }
-                SystemClock.sleep(3000);
             }
+
             return false;
         }
 

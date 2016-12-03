@@ -29,6 +29,8 @@ import java.util.ArrayList;
  */
 
 public class myIngredientsActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
+    MyApplication app;
+
     ListView recipeList;
     Button recipeButton;
     EditText recipeText;
@@ -43,6 +45,8 @@ public class myIngredientsActivity extends AppCompatActivity implements View.OnC
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.my_ingredients);
+
+        app = ((MyApplication) this.getApplication());
 
         recipeButton = (Button)findViewById(R.id.recipeButton);
         recipeText = (EditText)findViewById(R.id.recipeText);
@@ -79,52 +83,21 @@ public class myIngredientsActivity extends AppCompatActivity implements View.OnC
     public void onItemClick(AdapterView<?> adapter, View view, int position, long id) {
         Log.i("recipeList", "clicked");
 
-        ((MyApplication) this.getApplication()).viewRecipe(this, recipeIDs[position]);
+        app.viewRecipe(this, recipeIDs[position]);
     }
 
     private class SearchByIngredientsTask extends AsyncTask<String, Void, Boolean> {
         JSONArray result;
 
         protected Boolean doInBackground(String... query) {
-            HttpURLConnection con;
+            result = Util.ApiRequestArray("https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/findByIngredients?" +
+                    "fillIngredients=" + false +
+                    "&ingredients=" + query[0] +
+                    "&limitLicense=" + false +
+                    "&number" + 5 +
+                    "&ranking" + 1);
 
-            try {
-                URL url = new URL("https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/findByIngredients?" +
-                        "fillIngredients=" + false +
-                        "&ingredients=" + query[0] +
-                        "&limitLicense=" + false +
-                        "&number" + 5 +
-                        "&ranking" + 1);
-
-                con = (HttpURLConnection) url.openConnection();
-                con.setRequestMethod("GET");
-
-                // Add header properties, such as api key
-                con.setRequestProperty("X-Mashape-Key", ((MyApplication) myIngredientsActivity.this.getApplication()).getAPIKey());
-                con.setRequestProperty("Accept", "application/json");
-
-                int responseCode = con.getResponseCode();
-
-                BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-                con.disconnect();
-
-                String inputLine;
-                StringBuilder response = new StringBuilder();
-
-                while ((inputLine = in.readLine()) != null) {
-                    response.append(inputLine);
-                }
-                in.close();
-
-                Log.d("http", response.toString());
-
-                result = new JSONArray(response.toString());
-
-                return true;
-            }catch( Exception e) {
-                e.printStackTrace();
-            }
-            return false;
+            return result != null;
         }
 
         protected void onPostExecute(Boolean success) {

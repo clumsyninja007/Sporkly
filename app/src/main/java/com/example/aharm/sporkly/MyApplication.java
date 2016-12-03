@@ -20,6 +20,8 @@ public class MyApplication extends Application {
         super.onCreate();
         pantryStorage.load();
         shoppingStorage.load();
+
+        Util.app = this;
     }
 
     public ListStorage getPantryStorage() {
