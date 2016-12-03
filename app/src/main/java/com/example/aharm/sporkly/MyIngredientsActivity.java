@@ -49,7 +49,7 @@ public class MyIngredientsActivity extends AppCompatActivity implements View.OnC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.my_ingredients);
 
-        app = ((MyApplication) this.getApplication());
+        app = (MyApplication)this.getApplication();
 
         recipeButton = (Button)findViewById(R.id.recipeButton);
         recipeText = (EditText)findViewById(R.id.recipeText);
@@ -106,7 +106,7 @@ public class MyIngredientsActivity extends AppCompatActivity implements View.OnC
         JSONArray result;
 
         protected Boolean doInBackground(String... query) {
-            result = Util.apiRequestArray("https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/findByIngredients?" +
+            result = app.apiRequestArray("https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/findByIngredients?" +
                     "fillIngredients=" + false +
                     "&ingredients=" + query[0] +
                     "&limitLicense=" + false +

@@ -20,6 +20,7 @@ public class FavoritesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.favorites);
 
+        app = (MyApplication)this.getApplication();
     }
 
     @Override

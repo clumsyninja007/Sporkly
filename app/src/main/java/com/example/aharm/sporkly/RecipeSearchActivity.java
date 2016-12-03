@@ -47,7 +47,7 @@ public class RecipeSearchActivity extends AppCompatActivity implements View.OnCl
         super.onCreate(savedInstanceState);
         setContentView(R.layout.my_recipe_search);
 
-        app = ((MyApplication) this.getApplication());
+        app = (MyApplication)this.getApplication();
 
         recipeButton = (Button)findViewById(R.id.recipeSearchButton);
         recipeText = (EditText)findViewById(R.id.recipeSearchText);
@@ -104,7 +104,7 @@ public class RecipeSearchActivity extends AppCompatActivity implements View.OnCl
         JSONArray result;
 
         protected Boolean doInBackground(String... query) {
-            result = Util.apiRequestArray("https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/autocomplete?" +
+            result = app.apiRequestArray("https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/autocomplete?" +
                     "number=" + 5 +
                     "&query=" + query[0]);
 

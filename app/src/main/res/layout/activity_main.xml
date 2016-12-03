@@ -53,5 +53,5 @@
         android:text="@string/favoritesButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/favoritesButton" />
+        android:id="@+id/favorites" />
 </LinearLayout>

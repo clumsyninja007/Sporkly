@@ -1,10 +1,15 @@
 package com.example.aharm.sporkly;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 /**
  * This class controls loading the main page layout as well as button functionality
@@ -12,7 +17,9 @@ import android.widget.Button;
  */
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
-    private Button recipe, pantry, shoppingList, recipeSearch;
+    MyApplication app;
+
+    private Button recipe, pantry, shoppingList, recipeSearch, randomRecipe, favorites;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,15 +29,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void init() {
+        app = (MyApplication) this.getApplication();
+
         recipe = (Button)findViewById(R.id.myIngredients);
         pantry = (Button)findViewById(R.id.myPantry);
         shoppingList = (Button)findViewById(R.id.myShoppingList);
         recipeSearch = (Button)findViewById(R.id.recipeSearch);
+        randomRecipe = (Button)findViewById(R.id.randomRecipe);
+        favorites = (Button)findViewById(R.id.favorites);
 
         recipe.setOnClickListener(this);
         pantry.setOnClickListener(this);
         shoppingList.setOnClickListener(this);
         recipeSearch.setOnClickListener(this);
+        randomRecipe.setOnClickListener(this);
+        favorites.setOnClickListener(this);
 
         //((MyApplication) this.getApplication()).viewRecipe(this, 721001);
     }
@@ -49,6 +62,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.recipeSearch:
                 startActivity(new Intent(this, RecipeSearchActivity.class));
+                break;
+            case R.id.randomRecipe:
+                app.viewRandomRecipe(this);
+                break;
+            case R.id.favorites:
+                startActivity(new Intent(this, FavoritesActivity.class));
                 break;
             default:
                 break;

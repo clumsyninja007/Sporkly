@@ -55,7 +55,7 @@ public class RecipeViewActivity extends AppCompatActivity implements View.OnClic
         super.onCreate(savedInstanceState);
         setContentView(R.layout.recipe_view);
 
-        app = ((MyApplication) this.getApplication());
+        app = (MyApplication)this.getApplication();
 
         recipeTitle = (TextView) findViewById(R.id.recipeTitle);
         recipeIngredientsTitle = (TextView) findViewById(R.id.recipeIngredientsTitle);
@@ -80,7 +80,7 @@ public class RecipeViewActivity extends AppCompatActivity implements View.OnClic
         recipeIngredientsTitle.setOnClickListener(this);
         recipeInstructionsTitle.setOnClickListener(this);
 
-        new GetRecipeInfo().execute(recipeID);
+        new ViewRecipeTask().execute(recipeID);
     }
 
     @Override
@@ -114,11 +114,11 @@ public class RecipeViewActivity extends AppCompatActivity implements View.OnClic
         int instructionsHeight = 6;
 
         if (infoVisible) {
-            infoHeight = Util.listViewMeasuredHeight(recipeInfo);
+            infoHeight = app.listViewMeasuredHeight(recipeInfo);
         }
 
         if (ingredientsVisible) {
-            ingredientsHeight = Util.listViewMeasuredHeight(recipeIngredients);
+            ingredientsHeight = app.listViewMeasuredHeight(recipeIngredients);
         }
 
         if (instructionsVisible) {
@@ -134,18 +134,28 @@ public class RecipeViewActivity extends AppCompatActivity implements View.OnClic
         recipeInstructions.requestLayout();
     }
 
-    private class GetRecipeInfo extends AsyncTask<Integer, Void, Boolean> {
+    private class ViewRecipeTask extends AsyncTask<Integer, Void, Boolean> {
         JSONObject result = null;
         int retries = 5;
 
         protected Boolean doInBackground(Integer... recipeID) {
             for (int i = 0; i < retries; i++) {
                 Log.d("Attempt", Integer.toString(i));
-                result = Util.apiRequestObject("https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/" +
-                        recipeID[0] + "/information?includeNutrition=false");
+                try {
+                    if (recipeID[0] != 0) {
+                        // Get specific recipe if recipe id is not 0
+                        result = app.apiRequestObject("https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/" +
+                                recipeID[0] + "/information?includeNutrition=false");
+                    } else {
+                        // Get random recipe if recipe id is 0
+                        result = app.apiRequestObject("https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/random").getJSONArray("recipes").getJSONObject(0);
+                    }
 
-                if (result != null) {
-                    return true;
+                    if (result != null) {
+                        return true;
+                    }
+                } catch (Exception e) {
+                    return false;
                 }
             }
 

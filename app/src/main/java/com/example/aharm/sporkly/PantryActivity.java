@@ -60,7 +60,7 @@ public class PantryActivity extends AppCompatActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.my_pantry);
 
-        app = ((MyApplication) this.getApplication());
+        app = (MyApplication)this.getApplication();
 
         pantryStorage = app.getPantryStorage();
         shoppingStorage = app.getShoppingStorage();
@@ -103,7 +103,7 @@ public class PantryActivity extends AppCompatActivity implements View.OnClickLis
         searchAdapter.clear();
         searchAdapter.notifyDataSetChanged();
 
-        searchList.getLayoutParams().height = Util.listViewMeasuredHeight(searchList);
+        searchList.getLayoutParams().height = app.listViewMeasuredHeight(searchList);
     }
 
     @Override
@@ -166,7 +166,7 @@ public class PantryActivity extends AppCompatActivity implements View.OnClickLis
         JSONArray result;
 
         protected Boolean doInBackground(String... query) {
-            result = Util.apiRequestArray("https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/food/ingredients/autocomplete?" +
+            result = app.apiRequestArray("https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/food/ingredients/autocomplete?" +
                     "metaInformation=" + false +
                     "&number=" + 5 +
                     "&query=" + query[0]);
@@ -200,7 +200,7 @@ public class PantryActivity extends AppCompatActivity implements View.OnClickLis
                 Log.i("SearchList", "Updated");
                 searchAdapter.notifyDataSetChanged();
 
-                searchList.getLayoutParams().height = Util.listViewMeasuredHeight(searchList);
+                searchList.getLayoutParams().height = app.listViewMeasuredHeight(searchList);
                 searchList.requestLayout();
             } else {
                 Log.d("http", "API request failed");
