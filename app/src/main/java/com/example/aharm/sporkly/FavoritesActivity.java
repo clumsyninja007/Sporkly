@@ -3,6 +3,7 @@ package com.example.aharm.sporkly;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.ButtonBarLayout;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,7 +15,7 @@ import android.widget.ListView;
  *
  */
 
-public class FavoritesActivity extends AppCompatActivity {
+public class FavoritesActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
     private static final String[] CONTEXT_OPTIONS = { "Delete Entry", "Return" };
 
     MyApplication app;
@@ -40,8 +41,20 @@ public class FavoritesActivity extends AppCompatActivity {
         favoritesList.setAdapter(adapter);
 
         registerForContextMenu(favoritesList);
+
+        favoritesList.setOnItemClickListener(this);
     }
 
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Log.i("ItemClick", "Position: " + position);
+
+        try {
+            app.viewRecipe(this, favoritesStorage.getData(position).getInt("id"));
+        } catch (Exception e) {
+            Log.e("Error", e.toString());
+        }
+    }
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
