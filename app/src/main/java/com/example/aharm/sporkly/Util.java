@@ -17,7 +17,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 /**
- * Created by David on 12/3/2016.
+ * This class contains some useful functions used by various classes.
  */
 
 public class Util {

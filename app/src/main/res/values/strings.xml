@@ -4,6 +4,8 @@
     <string name="myShoppingListButton">My Shopping List</string>
     <string name="myIngredientsButton">Find a Recipe by Ingredients!</string>
     <string name="recipeSearchButton">Search for a Recipe</string>
+    <string name="randomRecipeButton">Random Recipe</string>
+    <string name="favoritesButton">Favorites</string>
     <string name="welcomeText">Welcome to Sporkly!\nWhat would you like to do today?</string>
 
     <string name="myIngredientLabel">My Ingredients</string>
@@ -11,6 +13,7 @@
     <string name="myShoppingListLabel">My Shopping List</string>
     <string name="recipeSearchLabel">Recipe Search</string>
     <string name="recipeViewLabel">Recipe View</string>
+    <string name="favoritesLabel">Favorites</string>
 
     <string name="shoppingHint">Enter Ingredient Name</string>
     <string name="shoppingButton">Search Ingredients</string>

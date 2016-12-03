@@ -21,6 +21,7 @@
         <activity android:name=".ShoppingListActivity" android:label="@string/myShoppingListLabel"></activity>
         <activity android:name=".RecipeSearchActivity" android:label="@string/recipeSearchButton"></activity>
         <activity android:name=".RecipeViewActivity" android:label="@string/recipeViewLabel"></activity>
+        <activity android:name=".FavoritesActivity" android:label="@string/favoritesLabel"></activity>
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />

@@ -42,4 +42,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/recipeSearch"/>
+
+    <Button
+        android:text="@string/randomRecipeButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/randomRecipe" />
+
+    <Button
+        android:text="@string/favoritesButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/favoritesButton" />
 </LinearLayout>
