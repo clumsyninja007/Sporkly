@@ -1,16 +1,12 @@
 package com.example.aharm.sporkly;
 
-import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -20,12 +16,7 @@ import android.widget.TextView;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.Random;
 
 /**
  * This class is used to display detailed recipe information.
@@ -112,7 +103,7 @@ public class RecipeViewActivity extends AppCompatActivity implements View.OnClic
                 try {
                     String title = recipeData.getString("title");
                     int id = recipeData.getInt("id");
-                    int index = favoritesStorage.find(title);
+                    int index = favoritesStorage.findInt("id", id);
 
                     if (index != -1) {
                         favoritesStorage.remove(index);
@@ -176,7 +167,7 @@ public class RecipeViewActivity extends AppCompatActivity implements View.OnClic
      * @param instructions the instructions string
      * @return the formatted instructions
      */
-    private String UpdateInstructions(String instructions) {
+    private String FormatInstructions(String instructions) {
         StringBuilder sb = new StringBuilder();
 
         char first = instructions.charAt(0);
@@ -244,6 +235,7 @@ public class RecipeViewActivity extends AppCompatActivity implements View.OnClic
             if (success) {
                 try {
                     String title = result.getString("title");
+                    int id = result.getInt("id");
                     String ingredients = result.getString("extendedIngredients");
                     String instructions = result.getString("instructions");
                     boolean vegetarian = result.getBoolean("vegetarian");
@@ -268,7 +260,7 @@ public class RecipeViewActivity extends AppCompatActivity implements View.OnClic
                     }
 
                     //UpdateInstructions(instructions);
-                    recipeInstructions.setText(UpdateInstructions(instructions));
+                    recipeInstructions.setText(FormatInstructions(instructions));
 
                     UpdateSizes();
 
@@ -278,7 +270,9 @@ public class RecipeViewActivity extends AppCompatActivity implements View.OnClic
                         recipeInstructionsTitle.setVisibility(View.GONE);
                     }
 
-                    if (favoritesStorage.find(title) != -1) {
+                    Log.d("Index", ""+favoritesStorage.findInt("id", id));
+
+                    if (favoritesStorage.findInt("id", id) != -1) {
                         recipeAddFavorite.setText("Remove from favorites");
                     }
 

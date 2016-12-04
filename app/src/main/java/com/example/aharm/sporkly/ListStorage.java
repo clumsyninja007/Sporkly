@@ -3,7 +3,6 @@ package com.example.aharm.sporkly;
 import android.content.Context;
 import android.util.Log;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.PrintWriter;
@@ -109,12 +108,11 @@ class ListStorage {
         return false;
     }
 
-    int find(String text) {
+    int findInt(String name, int value) {
         for (int i = 0; i < data.size(); i++) {
             try{
                 JSONObject obj = data.get(i);
-
-                if (obj.getString("text") == text) {
+                if (obj.getInt(name) == value) {
                     return i;
                 }
             } catch (Exception e) {

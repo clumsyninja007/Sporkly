@@ -2,7 +2,6 @@ package com.example.aharm.sporkly;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.ButtonBarLayout;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.MenuItem;
@@ -76,5 +75,11 @@ public class FavoritesActivity extends AppCompatActivity implements AdapterView.
             adapter.notifyDataSetChanged();
         }
         return true;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        adapter.notifyDataSetChanged();
     }
 }
