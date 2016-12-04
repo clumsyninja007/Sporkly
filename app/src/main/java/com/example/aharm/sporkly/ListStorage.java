@@ -10,7 +10,8 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
- * Created by David on 11/16/2016.
+ * This class is used to save/load data from a file, to be displayed
+ * in a ListView.
  */
 
 class ListStorage {

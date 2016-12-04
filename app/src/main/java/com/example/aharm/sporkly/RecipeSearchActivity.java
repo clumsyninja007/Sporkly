@@ -19,14 +19,11 @@ import android.widget.TextView;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 
 /**
- * Created by David on 11/16/2016.
+ * This activity allows a user to search for recipes by their name,
+ * and then view its details by clicking on it.
  */
 
 public class RecipeSearchActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener, TextView.OnEditorActionListener {

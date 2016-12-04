@@ -19,7 +19,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 /**
- * This class is used to display detailed recipe information.
+ * This class is used to display detailed recipe information, ingredients, and instructions
+ * and allows you to add a recipe to your favorites.
  */
 
 public class RecipeViewActivity extends AppCompatActivity implements View.OnClickListener {

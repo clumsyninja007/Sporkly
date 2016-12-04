@@ -11,7 +11,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 /**
- *
+ * This activity allows the user to view their favorite recipes, and click them
+ * to view their details, and also remove them.
  */
 
 public class FavoritesActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {

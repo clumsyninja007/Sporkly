@@ -16,10 +16,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-/**
- * Created by David on 11/16/2016.
- */
-
 public class MyApplication extends Application {
     private static final String API_KEY = "9rUDYWAnkEmshQkuvwanU54zDmXDp15QkyljsnQa9nVIoFwLY8";
     private ListStorage pantryStorage = new ListStorage(this, "my_pantry.txt");
