@@ -54,4 +54,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/favorites" />
+
+    <Button
+        android:text="Meal Planner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/meal_schedule" />
 </LinearLayout>

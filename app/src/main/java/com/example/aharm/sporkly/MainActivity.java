@@ -19,7 +19,7 @@ import org.json.JSONObject;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     MyApplication app;
 
-    private Button recipe, pantry, shoppingList, recipeSearch, randomRecipe, favorites;
+    private Button recipe, pantry, shoppingList, recipeSearch, randomRecipe, favorites, mealPlan;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         recipeSearch = (Button)findViewById(R.id.recipeSearch);
         randomRecipe = (Button)findViewById(R.id.randomRecipe);
         favorites = (Button)findViewById(R.id.favorites);
+        mealPlan = (Button) findViewById(R.id.meal_schedule);
 
         recipe.setOnClickListener(this);
         pantry.setOnClickListener(this);
@@ -44,6 +45,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         recipeSearch.setOnClickListener(this);
         randomRecipe.setOnClickListener(this);
         favorites.setOnClickListener(this);
+        mealPlan.setOnClickListener(this);
 
         //((MyApplication) this.getApplication()).viewRecipe(this, 721001);
     }
@@ -68,6 +70,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.favorites:
                 startActivity(new Intent(this, FavoritesActivity.class));
+                break;
+            case R.id.meal_schedule:
+                startActivity(new Intent(this, MealPlannerActivity.class));
                 break;
             default:
                 break;

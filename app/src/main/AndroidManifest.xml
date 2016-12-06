@@ -22,6 +22,7 @@
         <activity android:name=".RecipeSearchActivity" android:label="@string/recipeSearchButton"></activity>
         <activity android:name=".RecipeViewActivity" android:label="@string/recipeViewLabel"></activity>
         <activity android:name=".FavoritesActivity" android:label="@string/favoritesLabel"></activity>
+        <activity android:name=".MealPlannerActivity" android:label="@string/plannerLabel"></activity>
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />
