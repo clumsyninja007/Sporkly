@@ -11,31 +11,13 @@
     tools:context="com.example.aharm.sporkly.MainActivity"
     android:orientation="vertical">
 
+
     <TextView
         android:text="@string/welcomeText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/textView2"
         android:textAlignment="center" />
-
-
-    <Button
-        android:text="@string/myIngredientsButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/myIngredients"/>
-
-    <Button
-        android:text="@string/myPantryButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/myPantry" />
-
-    <Button
-        android:text="@string/myShoppingListButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/myShoppingList" />
 
     <Button
         android:text="@string/recipeSearchButton"
@@ -44,10 +26,34 @@
         android:id="@+id/recipeSearch"/>
 
     <Button
-        android:text="@string/randomRecipeButton"
+            android:text="@string/myIngredientsButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/myIngredients"/>
+
+    <Button
+        android:text="@string/myShoppingListButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/randomRecipe" />
+        android:id="@+id/myShoppingList" />
+
+    <Button
+            android:text="@string/myPantryButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/myPantry" />
+
+    <Button
+            android:text="@string/randomRecipeButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/randomRecipe" />
+
+        <Button
+            android:text="Meal Planner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/meal_schedule" />
 
     <Button
         android:text="@string/favoritesButton"
@@ -55,9 +61,5 @@
         android:layout_height="wrap_content"
         android:id="@+id/favorites" />
 
-    <Button
-        android:text="Meal Planner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/meal_schedule" />
+
 </LinearLayout>

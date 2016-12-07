@@ -7,19 +7,30 @@ import android.icu.util.Calendar;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.ContextMenu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.ListView;
 import android.widget.Toast;
 
+import static android.icu.util.Calendar.getInstance;
+
 /**
- * Created by Trevor
+ * Created by Trevor Dewitt
  */
 
-public class MealPlannerActivity extends AppCompatActivity implements View.OnClickListener {
+public class MealPlannerActivity extends AppCompatActivity implements  AdapterView.OnItemClickListener {
+    private static final String[] CONTEXT_OPTIONS = { "Delete Entry", "Return" };
 
-    Button date_display;
+    MyApplication app;
+    ListView scheduleList;
+    ListStorage scheduleStorage;
+    ArrayAdapter adapter;
     int year_x, month_x, day_x;
     static final int DIAL_ID = 0;
 
@@ -28,14 +39,26 @@ public class MealPlannerActivity extends AppCompatActivity implements View.OnCli
         super.onCreate(savedInstanceState);
         setContentView(R.layout.meal_planner);
 
-        final Calendar cal = Calendar.getInstance();
+        /*
+        Calendar widget here to later implement editing the date
+         */
+
+        final Calendar cal = getInstance();
         year_x = cal.get(Calendar.YEAR);
         month_x = cal.get(Calendar.MONTH);
         day_x = cal.get(Calendar.DAY_OF_MONTH);
 
-        date_display = (Button)findViewById(R.id.dateSelect);
+        app = (MyApplication)this.getApplication();
 
-        date_display.setOnClickListener(this);
+        scheduleStorage = app.getScheduleStorage();
+
+        scheduleList = (ListView)findViewById(R.id.scheduleList);
+
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, scheduleStorage.getItems());
+        scheduleList.setAdapter(adapter);
+        registerForContextMenu(scheduleList);
+
+        scheduleList.setOnItemClickListener(this);
     }
 
     @Override
@@ -51,24 +74,47 @@ public class MealPlannerActivity extends AppCompatActivity implements View.OnCli
         public void onDateSet(DatePicker datePicker, int year, int month, int day) {
             year_x = year;
             month_x = month;
-            day_x = day+3;
-            Toast.makeText(MealPlannerActivity.this, year_x + " / " + month_x + " / " + day_x,Toast.LENGTH_LONG).show();
+            day_x = day;
+            Toast.makeText(MealPlannerActivity.this, month_x + " / " + day_x + " / " + year_x,Toast.LENGTH_LONG).show();
         }
     };
 
-    public void onClick(View v) {
-        switch(v.getId()) {
-            case R.id.dateSelect:
-                Log.i("DateSelect", "clicked");
-                showDialog(DIAL_ID);
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Log.i("ItemClick", "Position: " + position);
 
-                // This forces the keyboard to hide, because for some reason
-                // the keyboard showing makes the search results not show.
-    //            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-       //         imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-                break;
-            default:
-                break;
+        try {
+            app.viewRecipe(this, scheduleStorage.getData(position).getInt("id"));
+        } catch (Exception e) {
+            Log.e("Error", e.toString());
         }
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        menu.setHeaderTitle("What do you want??");
+
+        for(String option : CONTEXT_OPTIONS){
+            menu.add(option);
+        }
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        int selectedIndex = info.position;
+        CharSequence option = item.getTitle();
+
+        if (option.equals(CONTEXT_OPTIONS[0])) {
+            scheduleStorage.remove(selectedIndex);
+            adapter.notifyDataSetChanged();
+        }
+        return true;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        adapter.notifyDataSetChanged();
     }
 }

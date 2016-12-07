@@ -26,7 +26,8 @@
 
     <ScrollView android:id="@+id/ScrollView01"
         android:layout_width="fill_parent"
-        android:layout_height="528dp">
+        android:layout_height="464dp"
+        android:layout_weight="0.50">
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:tools="http://schemas.android.com/tools"
@@ -89,5 +90,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/recipeAddFavorite" />
+
+    <Button
+        android:text="Add to Meal Planner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/recipeAddSchedule" />
 
 </LinearLayout>

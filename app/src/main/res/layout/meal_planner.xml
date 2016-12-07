@@ -6,10 +6,18 @@
     android:layout_alignParentRight="false"
     android:gravity="center_horizontal">
 
-    <Button
-        android:text="Date Selection"
+    <TextView
+        android:text="Scheduled Recipes"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/dateSelect"
-        android:layout_width="wrap_content"
-        android:gravity="center" />
+        android:id="@+id/scheduleText"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title.Inverse"
+        android:textAlignment="center"
+        android:background="#4286f4"
+        android:textSize="20sp" />
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/scheduleList" />
 </LinearLayout>
