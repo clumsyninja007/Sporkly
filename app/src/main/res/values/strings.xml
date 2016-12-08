@@ -18,4 +18,11 @@
     <string name="shoppingHint">Enter Ingredient Name</string>
     <string name="shoppingButton">Search Ingredients</string>
     <string name="shoppingTitle">My Shopping List</string>
+
+    <string-array name="choices">
+        <item>Coke</item>
+        <item>Pepsi</item>
+        <item>Sprite</item>
+        <item>Seven Up</item>
+    </string-array>
 </resources>

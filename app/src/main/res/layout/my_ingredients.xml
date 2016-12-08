@@ -24,6 +24,12 @@
         android:padding="2dp" />
 
     <Button
+        android:text="From Pantry"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/pantryButton" />
+
+    <Button
         android:text="Search for recipes"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
