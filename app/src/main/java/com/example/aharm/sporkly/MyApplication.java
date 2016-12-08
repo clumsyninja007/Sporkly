@@ -50,6 +50,11 @@ public class MyApplication extends Application {
         return scheduleStorage;
     }
 
+    /*
+     * Switches to the recipe view activity to view details of a recipe.
+     * @param activity the activity you are coming from
+     * @param recipeID the id of the recipe you are viewing
+     */
     public void viewRecipe(AppCompatActivity activity, int recipeID) {
         Log.d("ViewingRecipe", Integer.toString(recipeID));
 
@@ -59,12 +64,25 @@ public class MyApplication extends Application {
         startActivity(intent);
     }
 
+    /*
+     * Switches to the recipe view activity to view details of a random recipe.
+     * @param activity the activity you are coming from
+     */
     public void viewRandomRecipe(AppCompatActivity activity) {
         viewRecipe(activity, 0);
     }
 
+    /*
+     * Gets the current recipe id being viewed.
+     */
     public int getRecipeID() {return recipeID;}
 
+    /*
+     * Sends a get http request using our api key.
+     * @param urlString the url to query.
+     * @return the result of the http request, returns an empty string
+     * if the http request failed.
+     */
     String httpRequest(String urlString) {
         try {
             Log.d("url", urlString);
@@ -101,6 +119,12 @@ public class MyApplication extends Application {
         return "";
     }
 
+    /*
+     * Sends a request to the api, and tries to convert
+     * the response to a JSONArray.
+     * @param urlString the url to query
+     * @return the JSONArray, null if request failed.
+     */
     JSONArray apiRequestArray(String urlString) {
         String response = httpRequest(urlString);
 
@@ -115,6 +139,12 @@ public class MyApplication extends Application {
         return null;
     }
 
+    /*
+     * Sends a request to the api, and tries to convert
+     * the response to a JSONObject.
+     * @param urlString the url to query
+     * @return the JSONObject, null if request failed.
+     */
     JSONObject apiRequestObject(String urlString) {
         String response = httpRequest(urlString);
 
@@ -129,6 +159,12 @@ public class MyApplication extends Application {
         return null;
     }
 
+    /*
+     * The measured height of the list view with all
+     * of it's contents.
+     * @param view the view to measure
+     * @return the final measured height of the list view
+     */
     int listViewMeasuredHeight(ListView view) {
         int height = 0;
 
