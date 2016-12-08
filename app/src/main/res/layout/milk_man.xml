@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/milk_man"
+    android:weightSum="1">
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="date"
+        android:ems="15"
+        android:id="@+id/milkDate"
+        android:background="@android:color/holo_orange_dark"
+        android:fontFamily="cursive"
+        android:textColor="#ffe900"
+        android:layout_weight="0.09"
+        android:hint="ENter yEr DatE" />
+
+    <Button
+        android:text="Is mah milk bad?"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/findMeMilk"
+        android:layout_weight="0.09" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/bad_yn"
+        android:layout_weight="0.27"
+        android:ems="52" />
+</LinearLayout>

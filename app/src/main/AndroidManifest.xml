@@ -23,6 +23,7 @@
         <activity android:name=".RecipeViewActivity" android:label="@string/recipeViewLabel"></activity>
         <activity android:name=".FavoritesActivity" android:label="@string/favoritesLabel"></activity>
         <activity android:name=".MealPlannerActivity" android:label="@string/plannerLabel"></activity>
+        <activity android:name=".MilkMan" android:label="Milk Man"></activity>
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />
