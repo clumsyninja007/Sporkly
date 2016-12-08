@@ -40,6 +40,7 @@ public class MyIngredientsActivity extends AppCompatActivity implements View.OnC
 
     ListView recipeList;
     Button recipeButton;
+    Button pantryListThing;
     EditText recipeText;
 
     //Array for list of recipes
@@ -58,6 +59,7 @@ public class MyIngredientsActivity extends AppCompatActivity implements View.OnC
         pantryStorage = app.getPantryStorage();
 
         recipeButton = (Button)findViewById(R.id.recipeButton);
+        pantryListThing = (Button)findViewById(R.id.pantryListThing);
         recipeText = (EditText)findViewById(R.id.recipeText);
         recipeList = (ListView)findViewById(R.id.recipeList);
 
@@ -67,11 +69,9 @@ public class MyIngredientsActivity extends AppCompatActivity implements View.OnC
         recipeList.setAdapter(recipeAdapter);
 
         recipeButton.setOnClickListener(this);
+        pantryListThing.setOnClickListener(this);
         recipeList.setOnItemClickListener(this);
         recipeText.setOnEditorActionListener(this);
-
-
-        pantryAlert();
     }
 
     @Override
@@ -88,8 +88,10 @@ public class MyIngredientsActivity extends AppCompatActivity implements View.OnC
 
                 imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
                 break;
-            case R.id.pantryButton:
-                Log.i("pantryButton", "clicked");
+            case R.id.pantryListThing:
+                Log.i("pantryListThing", "clicked");
+
+                pantryAlert();
 
                 imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
 
@@ -175,6 +177,11 @@ public class MyIngredientsActivity extends AppCompatActivity implements View.OnC
 
         // where we will store or remove selected items
         final ArrayList<Integer> mSelectedItems = new ArrayList<Integer>();
+        final CharSequence[] items = new CharSequence[pantryStorage.getItems().size()];
+
+        for(int i=0;i<items.length;i++){
+            items[i] = pantryStorage.getItems().get(i);
+        }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(MyIngredientsActivity.this);
 
@@ -184,7 +191,7 @@ public class MyIngredientsActivity extends AppCompatActivity implements View.OnC
                 // specify the list array, the items to be selected by default (null for none),
                 // and the listener through which to receive call backs when items are selected
                 // R.array.choices were set in the resources res/values/strings.xml
-                .setMultiChoiceItems(R.array.choices, null, new DialogInterface.OnMultiChoiceClickListener() {
+                .setMultiChoiceItems(items, null, new DialogInterface.OnMultiChoiceClickListener() {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which, boolean isChecked) {
@@ -213,12 +220,14 @@ public class MyIngredientsActivity extends AppCompatActivity implements View.OnC
 
                         // user clicked OK, so save the mSelectedItems results somewhere
                         // here we are trying to retrieve the selected items indices
-                        String selectedIndex = "";
+                        String selectedItems = "";
                         for(Integer i : mSelectedItems){
-                            selectedIndex += i + ", ";
+                            selectedItems += items[i] + ", ";
+                            Log.d("selectedIndex = ",items[i].toString());
                         }
 
-                        showToast("Selected index: " + selectedIndex);
+                        recipeText.setText(selectedItems);
+                        //showToast("Selected index: " + selectedIndex);
 
                     }
                 })
