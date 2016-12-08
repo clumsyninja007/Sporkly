@@ -222,7 +222,7 @@ public class MyIngredientsActivity extends AppCompatActivity implements View.OnC
                         // here we are trying to retrieve the selected items indices
                         String selectedItems = "";
                         for(Integer i : mSelectedItems){
-                            selectedItems += items[i] + ", ";
+                            selectedItems += items[i] + ",";
                             Log.d("selectedIndex = ",items[i].toString());
                         }
 
