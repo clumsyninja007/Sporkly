@@ -127,6 +127,7 @@ public class RecipeViewActivity extends AppCompatActivity implements View.OnClic
 
                 JSONObject obj = new JSONObject();
                 obj.put("id", id);
+                obj.put("name", title);
                 obj.put("year", year_x);
                 obj.put("month", month_x);
                 obj.put("day", day_x);

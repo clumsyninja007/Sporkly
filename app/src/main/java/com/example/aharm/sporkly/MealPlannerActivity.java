@@ -15,6 +15,8 @@ import android.widget.DatePicker;
 import android.widget.ListView;
 import android.widget.Toast;
 import org.json.JSONException;
+import org.json.JSONObject;
+
 import static android.icu.util.Calendar.getInstance;
 
 
@@ -23,7 +25,7 @@ import static android.icu.util.Calendar.getInstance;
  */
 
 public class MealPlannerActivity extends AppCompatActivity implements  AdapterView.OnItemClickListener {
-    private static final String[] CONTEXT_OPTIONS = { "Delete Entry", "Edit Date", "Return" };
+    private static final String[] CONTEXT_OPTIONS = { "Delete Entry", "Edit Date", "Add to favorites", "Return" };
 
     MyApplication app;
 
@@ -118,6 +120,25 @@ public class MealPlannerActivity extends AppCompatActivity implements  AdapterVi
         else if (option.equals(CONTEXT_OPTIONS[1])) {
             last_id = selectedIndex;
             showDialog(DIAL_ID);
+        } else if (option.equals(CONTEXT_OPTIONS[2])) {
+            try {
+                JSONObject obj = scheduleStorage.getData(selectedIndex);
+
+                String title = obj.getString("name");
+                int id = obj.getInt("id");
+                int index = favoritesStorage.findInt("id", id);
+
+                if (index != -1) {
+                    favoritesStorage.remove(index);
+                } else {
+                    JSONObject newFavorite = new JSONObject();
+                    newFavorite.put("id", id);
+
+                    favoritesStorage.add(title, newFavorite);
+                }
+            } catch (Exception e) {
+                Log.e("JSON", e.toString());
+            }
         }
         return true;
     }
