@@ -16,8 +16,9 @@
         android:background="#4286f4"
         android:textSize="20sp" />
 
-    <ListView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/scheduleList" />
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/scheduleList" />
+
 </LinearLayout>
