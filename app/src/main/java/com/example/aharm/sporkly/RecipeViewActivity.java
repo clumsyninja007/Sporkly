@@ -131,7 +131,7 @@ public class RecipeViewActivity extends AppCompatActivity implements View.OnClic
                 obj.put("month", month_x);
                 obj.put("day", day_x);
 
-                scheduleStorage.add(title, obj);
+                scheduleStorage.add(title + "\n" + Integer.toString(month_x) + "/" + Integer.toString(day_x) + "/" + Integer.toString(year_x), obj);
 
             } catch (Exception e) {
                 Log.e("JSON", e.toString());
