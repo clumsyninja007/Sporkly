@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_alignParentBottom="false"
+    android:layout_alignParentRight="false"
+    android:gravity="center_horizontal">
+
+    <TextView
+        android:text="Scheduled Recipes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/scheduleText"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title.Inverse"
+        android:textAlignment="center"
+        android:background="#4286f4"
+        android:textSize="20sp" />
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/scheduleList" />
+
+</LinearLayout>

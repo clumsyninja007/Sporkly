@@ -14,6 +14,7 @@
     <string name="recipeSearchLabel">Recipe Search</string>
     <string name="recipeViewLabel">Recipe View</string>
     <string name="favoritesLabel">Favorites</string>
+    <string name="plannerLabel">Meal Planner</string>
 
     <string name="shoppingHint">Enter Ingredient Name</string>
     <string name="shoppingButton">Search Ingredients</string>

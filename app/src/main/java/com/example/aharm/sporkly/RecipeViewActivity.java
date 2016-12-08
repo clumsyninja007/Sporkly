@@ -1,5 +1,8 @@
 package com.example.aharm.sporkly;
 
+import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.icu.util.Calendar;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -9,14 +12,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+
+import static android.icu.util.Calendar.getInstance;
 
 /**
  * This class is used to display detailed recipe information, ingredients, and instructions
@@ -26,14 +33,15 @@ import java.util.ArrayList;
 public class RecipeViewActivity extends AppCompatActivity implements View.OnClickListener {
     MyApplication app;
 
-    ListStorage favoritesStorage;
+    ListStorage favoritesStorage, scheduleStorage;
 
     TextView recipeTitle, recipeIngredientsTitle, recipeInstructionsTitle, recipeInstructions, failedText;
     ListView recipeInfo, recipeIngredients;
     ProgressBar recipeLoad;
-    Button recipeAddFavorite;
+    Button recipeAddFavorite, recipeAddSchedule;
 
-    int recipeID;
+    int recipeID, year_x, month_x, day_x;
+    static final int DIAL_ID = 0;
 
     JSONObject recipeData;
 
@@ -54,9 +62,15 @@ public class RecipeViewActivity extends AppCompatActivity implements View.OnClic
         super.onCreate(savedInstanceState);
         setContentView(R.layout.recipe_view);
 
+        final Calendar cal = getInstance();
+        year_x = cal.get(Calendar.YEAR);
+        month_x = cal.get(Calendar.MONTH);
+        day_x = cal.get(Calendar.DAY_OF_MONTH);
+
         app = (MyApplication)this.getApplication();
 
         favoritesStorage = app.getFavoritesStorage();
+        scheduleStorage = app.getScheduleStorage();
 
         recipeTitle = (TextView) findViewById(R.id.recipeTitle);
         recipeIngredientsTitle = (TextView) findViewById(R.id.recipeIngredientsTitle);
@@ -67,6 +81,7 @@ public class RecipeViewActivity extends AppCompatActivity implements View.OnClic
         recipeIngredients = (ListView) findViewById(R.id.recipeIngredients);
         recipeLoad = (ProgressBar) findViewById(R.id.recipeLoadProgress);
         recipeAddFavorite = (Button) findViewById(R.id.recipeAddFavorite);
+        recipeAddSchedule = (Button) findViewById(R.id.recipeAddSchedule);
 
         recipeInfoList = new ArrayList<>();
         recipeAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, recipeInfoList);
@@ -80,6 +95,7 @@ public class RecipeViewActivity extends AppCompatActivity implements View.OnClic
         recipeIngredientsTitle.setOnClickListener(this);
         recipeInstructionsTitle.setOnClickListener(this);
         recipeAddFavorite.setOnClickListener(this);
+        recipeAddSchedule.setOnClickListener(this);
 
         recipeLoad.setVisibility(View.VISIBLE);
 
@@ -87,6 +103,41 @@ public class RecipeViewActivity extends AppCompatActivity implements View.OnClic
 
         new ViewRecipeTask().execute(recipeID);
     }
+
+    @Override
+    protected Dialog onCreateDialog(int id) {
+        if(id == DIAL_ID)
+            return new DatePickerDialog(this, dpickerListener, year_x, month_x, day_x);
+        else
+            return null;
+    }
+
+    private DatePickerDialog.OnDateSetListener dpickerListener = new DatePickerDialog.OnDateSetListener() {
+        @Override
+        public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+            Log.i("oncreatedialog", "endof");
+            year_x = year;
+            month_x = month+1;
+            day_x = day;
+            Toast.makeText(RecipeViewActivity.this, month_x + " / " + day_x + " / " + year_x,Toast.LENGTH_LONG).show();
+
+            try {
+                String title = recipeData.getString("title");
+                int id = recipeData.getInt("id");
+
+                JSONObject obj = new JSONObject();
+                obj.put("id", id);
+                obj.put("year", year_x);
+                obj.put("month", month_x);
+                obj.put("day", day_x);
+
+                scheduleStorage.add(title, obj);
+
+            } catch (Exception e) {
+                Log.e("JSON", e.toString());
+            }
+        }
+    };
 
     @Override
     public void onClick(View view) {
@@ -118,10 +169,13 @@ public class RecipeViewActivity extends AppCompatActivity implements View.OnClic
 
                         recipeAddFavorite.setText("Remove from favorites");
                     }
-
                 } catch (Exception e) {
                     Log.e("JSON", e.toString());
                 }
+                break;
+            case R.id.recipeAddSchedule:
+                showDialog(DIAL_ID);
+                break;
             default:
                 break;
         }
@@ -257,7 +311,20 @@ public class RecipeViewActivity extends AppCompatActivity implements View.OnClic
                         String unit = obj.getString("unit");
                         double amount = obj.getDouble("amount");
 
-                        recipeIngredientsAdapter.add(name + ": " + amount + " " + unit);
+                        double denominator = (1 / amount);
+                        double orig_den = denominator;
+                        int numerator = 1;
+                        while (numerator < 9 && denominator % 1 != 0) {
+                            denominator = orig_den;
+                            numerator++;
+                            denominator = denominator*numerator;
+                        }
+
+                        if(amount < 1) {
+                            recipeIngredientsAdapter.add(name + ": " + numerator + "/" + (int)denominator + " " + unit);
+                        } else {
+                            recipeIngredientsAdapter.add(name + ": " + amount + " " + unit);
+                        }
                     }
 
                     //UpdateInstructions(instructions);

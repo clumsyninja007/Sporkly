@@ -21,6 +21,7 @@ public class MyApplication extends Application {
     private ListStorage pantryStorage = new ListStorage(this, "my_pantry.txt");
     private ListStorage shoppingStorage = new ListStorage(this, "my_shopping_list.txt");
     private ListStorage favoritesStorage = new ListStorage(this, "my_favorites.txt");
+    private ListStorage scheduleStorage = new ListStorage(this, "my_schedule.txt");
 
     private int recipeID;
 
@@ -30,6 +31,7 @@ public class MyApplication extends Application {
         pantryStorage.load();
         shoppingStorage.load();
         favoritesStorage.load();
+        scheduleStorage.load();
     }
 
     public ListStorage getPantryStorage() {
@@ -42,6 +44,10 @@ public class MyApplication extends Application {
 
     public ListStorage getFavoritesStorage() {
         return favoritesStorage;
+    }
+
+    public ListStorage getScheduleStorage() {
+        return scheduleStorage;
     }
 
     public void viewRecipe(AppCompatActivity activity, int recipeID) {
