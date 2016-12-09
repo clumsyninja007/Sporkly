@@ -77,9 +77,14 @@ public class MealPlannerActivity extends AppCompatActivity implements  AdapterVi
             Toast.makeText(MealPlannerActivity.this, month_x + " / " + day_x + " / " + year_x, Toast.LENGTH_LONG).show();
 
             try {
+                String name = scheduleStorage.getData(last_id).getString("name");
+
                 scheduleStorage.getData(last_id).put("year", year_x);
                 scheduleStorage.getData(last_id).put("month", month_x);
                 scheduleStorage.getData(last_id).put("day", day_x);
+                scheduleStorage.getData(last_id).put("text", name + "\n" + Integer.toString(month_x) + "/" + Integer.toString(day_x) + "/" + Integer.toString(year_x));
+                scheduleStorage.refresh();
+                adapter.notifyDataSetChanged();
             } catch (JSONException e) {
                 e.printStackTrace();
             }
