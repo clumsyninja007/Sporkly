@@ -65,7 +65,7 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:srcCompat="@drawable/sporklylogo"
+        app:srcCompat="@mipmap/sporklylogo"
         android:contentDescription="@string/milkManButtonText"
         android:id="@+id/milkManButton" />
 
